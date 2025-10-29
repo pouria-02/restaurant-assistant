@@ -46,7 +46,7 @@ def restaurant_assistant(question):
     response = llm.invoke(msg)
     return response.content
 
-# ===== CSS برای واکنش‌گرایی و فاصله =====
+# ===== CSS برای فاصله و واکنش‌گرایی =====
 st.markdown("""
 <style>
 div.block-container {
@@ -55,6 +55,19 @@ div.block-container {
 }
 h1 {
     line-height: 1.3;
+}
+.food-card {
+    padding:10px; 
+    margin-bottom:8px; 
+    border-bottom:1px solid #cccccc;
+}
+.food-name {
+    color: #0066cc; 
+    font-size:16px; 
+    font-weight:bold;
+}
+.food-ingredients {
+    font-size:14px;
 }
 </style>
 """, unsafe_allow_html=True)
@@ -70,9 +83,9 @@ for i, category in enumerate(menu.keys()):
         st.subheader(f"📋 {category}")
         for dish, ingredients in menu[category].items():
             st.markdown(f"""
-            <div style='padding:10px; margin-bottom:8px; border-bottom:1px solid #cccccc;'>
-                <span style='color: #0066cc; font-size:16px; font-weight:bold;'>{dish}</span><br>
-                <span style='font-size:14px;'>{ingredients}</span>
+            <div class='food-card'>
+                <span class='food-name'>{dish}</span><br>
+                <span class='food-ingredients'>{ingredients}</span>
             </div>
             """, unsafe_allow_html=True)
 
@@ -83,7 +96,10 @@ question = st.text_input("سوال خود را بپرسید:")
 if question:
     answer = restaurant_assistant(question)
     st.markdown(
-        f"<div style='background-color: #f0f0f0; padding: 15px; border-radius: 10px; font-size:15px;'>"
-        f"**پاسخ دستیار:**<br>{answer}</div>",
+        f"""
+        <div style='background-color: white; color: black; padding: 15px; border-radius: 10px; font-size:15px;'>
+            <strong>پاسخ دستیار:</strong><br>{answer}
+        </div>
+        """,
         unsafe_allow_html=True
     )
