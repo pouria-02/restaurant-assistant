@@ -1,23 +1,16 @@
-# app.py
 import streamlit as st
 from langchain_google_genai import ChatGoogleGenerativeAI
 from langchain_core.messages import HumanMessage
 import os
-import socket
-import qrcode
-from PIL import Image
-from io import BytesIO
 
-# -----------------------
-# 🧠 تنظیمات API
-# -----------------------
-os.environ["GOOGLE_API_KEY"] = "AIzaSyCU2qgTdtZrzUXHWwO4vpXpCSefftxcdiA"  # 🔹 اینجا کلید Gemini API رو بذار
+# گرفتن API Key از Secret
+api_key = os.environ.get("GOOGLE_API_KEY")
+
+# Google Gemini
 MODEL_NAME = "gemini-2.0-flash-exp"
-llm = ChatGoogleGenerativeAI(model=MODEL_NAME)
+llm = ChatGoogleGenerativeAI(model=MODEL_NAME, api_key=api_key)
 
-# -----------------------
-# 🍽️ منوی رستوران
-# -----------------------
+# منوی نمونه
 menu = {
     "پیتزا مارگاریتا": "خمیر نازک، سس گوجه‌فرنگی، پنیر موتزارلا، ریحان تازه",
     "برگر کلاسیک": "گوشت گوساله، نان برگر، پنیر چدار، کاهو، گوجه، سس مخصوص",
@@ -25,72 +18,37 @@ menu = {
     "پاستا آلفردو": "پاستا، سس خامه‌ای، مرغ، قارچ، پنیر پارمزان",
 }
 
-# -----------------------
-# 💬 تابع پاسخ‌دهنده
-# -----------------------
+# تابع دستیار رستوران
 def restaurant_assistant(question):
     system_prompt = (
-        "تو یک دستیار رستوران هستی و فقط درباره‌ی غذاهای منوی زیر پاسخ می‌دهی. "
-        "اگر کاربر درباره‌ی یک غذا سؤال پرسید، فقط مواد تشکیل‌دهنده آن را بگو. "
-        "اگر درباره‌ی مواد تشکیل‌دهنده سؤال پرسید، خواص آن را توضیح بده و اگر قابل تهیه در خانه است، "
-        "به طور خلاصه روش تهیه‌اش را هم بگو. "
-        "اگر سؤال هیچ ارتباطی با منو یا مواد تشکیل‌دهنده نداشت، بگو: "
-        "«لطفاً فقط درباره‌ی منو سؤال بفرمایید.»\n\n"
+        "تو یک دستیار رستوران هستی. فقط درباره‌ی غذاهای منوی زیر پاسخ بده. "
+        "اگر سؤال ربطی به منو یا مواد تشکیل‌دهنده‌ی آن‌ها نداشت، بگو: "
+        "«لطفا فقط درباره‌ی منو سوال بفرمایید.»\n\n"
+        "اگر کاربر درباره‌ی مواد تشکیل‌دهنده‌ی هر غذا پرسید، "
+        "در مورد آن ماده توضیح بده، خواصش را بگو و اگر قابل تهیه در خانه است، "
+        "به طور خلاصه روش تهیه‌اش را هم توضیح بده.\n\n"
         f"منو:\n{menu}"
     )
 
     msg = [HumanMessage(content=f"{system_prompt}\n\nسؤال مشتری: {question}")]
-    res = llm.invoke(msg)
-    return res.content
+    response = llm.invoke(msg)
+    return response.content
 
-# -----------------------
-# 🌐 گرفتن IP سیستم
-# -----------------------
-def get_local_ip():
-    try:
-        s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-        s.connect(("8.8.8.8", 80))
-        ip = s.getsockname()[0]
-        s.close()
-        return ip
-    except Exception:
-        return "localhost"
+# ===== UI مرتب =====
+st.title("🍽️ دستیار رستوران")
 
-# -----------------------
-# 🎨 رابط کاربری Streamlit
-# -----------------------
-st.set_page_config(page_title="🍕 دستیار منوی رستوران", layout="wide")
-st.title("🍽️ دستیار رستوران هوشمند")
-
-col1, col2 = st.columns([1, 2])
+# ستون‌ها: چپ منو، راست سوال و جواب
+col1, col2 = st.columns([2, 3])
 
 with col1:
-    st.subheader("📋 منوی رستوران")
-    for dish, ingredients in menu.items():
-        st.markdown(f"**{dish}**: {ingredients}")
+    st.subheader("📋 منو رستوران")
+    with st.expander("نمایش منو"):
+        for dish, ingredients in menu.items():
+            st.write(f"**{dish}**: {ingredients}")
 
 with col2:
-    st.subheader("💬 سوال خود را بپرسید")
-    question = st.text_input("سؤال شما:")
-
+    st.subheader("💬 پرسش و پاسخ")
+    question = st.text_input("سوال خود را بپرسید:")
     if question:
-        with st.spinner("در حال پاسخگویی..."):
-            answer = restaurant_assistant(question)
-            st.success(f"🤖 پاسخ: {answer}")
-
-# -----------------------
-# 📱 QR Code و آدرس دسترسی
-# -----------------------
-local_ip = get_local_ip()
-app_url = "https://restaurant-assistant-wne4pww28hatw2fgiqxpj8.streamlit.app/"
-
-st.divider()
-st.subheader("📱 دسترسی از گوشی یا دستگاه دیگر")
-
-qr = qrcode.QRCode(box_size=5, border=1)
-qr.add_data(app_url)
-qr.make(fit=True)
-img = qr.make_image(fill_color="black", back_color="white")
-buf = BytesIO()
-img.save(buf)
-st.image(Image.open(buf), caption=f"اسکن کنید یا آدرس زیر را باز کنید:\n{app_url}")
+        answer = restaurant_assistant(question)
+        st.markdown(f"**پاسخ دستیار:**\n\n{answer}")
