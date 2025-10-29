@@ -6,10 +6,11 @@ import os
 # API Key
 api_key = os.environ.get("GOOGLE_API_KEY")
 
+# مدل Google Gemini
 MODEL_NAME = "gemini-2.0-flash-exp"
 llm = ChatGoogleGenerativeAI(model=MODEL_NAME, api_key=api_key)
 
-# منو با دسته‌بندی
+# منوی نمونه با دسته‌بندی
 menu = {
     "فست فود": {
         "پیتزا مارگاریتا": "خمیر نازک، سس گوجه‌فرنگی، پنیر موتزارلا، ریحان تازه",
@@ -30,7 +31,7 @@ menu = {
     }
 }
 
-# دستیار رستوران
+# تابع دستیار رستوران
 def restaurant_assistant(question):
     system_prompt = (
         "تو یک دستیار رستوران هستی. فقط درباره‌ی غذاهای منوی زیر پاسخ بده. "
@@ -45,19 +46,20 @@ def restaurant_assistant(question):
     response = llm.invoke(msg)
     return response.content
 
-# ===== UI =====
+# ===== UI رنگی =====
 st.markdown("<h1 style='text-align: center; color: #ff6600;'>🍽️ منوی رستوران نمونه</h1>", unsafe_allow_html=True)
 
-# انتخاب دسته‌بندی
-category = st.selectbox("دسته منو را انتخاب کنید:", list(menu.keys()))
+# Tabs برای دسته‌ها
+tabs = st.tabs(list(menu.keys()))
 
-# نمایش منو آن دسته
-st.subheader(f"📋 {category}")
-with st.expander("نمایش منو"):
-    for dish, ingredients in menu[category].items():
-        st.markdown(f"<span style='color: #0066cc;'>**{dish}**</span>: {ingredients}", unsafe_allow_html=True)
+for i, category in enumerate(menu.keys()):
+    with tabs[i]:
+        st.subheader(f"📋 {category}")
+        for dish, ingredients in menu[category].items():
+            st.markdown(f"<span style='color: #0066cc;'>**{dish}**</span>: {ingredients}", unsafe_allow_html=True)
 
-# سوال و جواب AI
+# بخش سوال و جواب AI زیر تب‌ها
+st.markdown("---")
 st.subheader("💬 پرسش و پاسخ")
 question = st.text_input("سوال خود را بپرسید:")
 if question:
