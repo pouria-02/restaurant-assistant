@@ -34,21 +34,25 @@ def restaurant_assistant(question):
     response = llm.invoke(msg)
     return response.content
 
-# ===== UI مرتب =====
-st.title("🍽️ دستیار رستوران")
+# ===== UI رنگی و مرتب =====
+st.markdown("<h1 style='text-align: center; color: #ff6600;'>🍽️ دستیار رستوران</h1>", unsafe_allow_html=True)
 
 # ستون‌ها: چپ منو، راست سوال و جواب
 col1, col2 = st.columns([2, 3])
 
 with col1:
-    st.subheader("📋 منو رستوران")
+    st.markdown("### 📋 منو رستوران", unsafe_allow_html=True)
     with st.expander("نمایش منو"):
         for dish, ingredients in menu.items():
-            st.write(f"**{dish}**: {ingredients}")
+            st.markdown(f"<span style='color: #0066cc;'>**{dish}**</span>: {ingredients}", unsafe_allow_html=True)
 
 with col2:
-    st.subheader("💬 پرسش و پاسخ")
+    st.markdown("### 💬 پرسش و پاسخ", unsafe_allow_html=True)
     question = st.text_input("سوال خود را بپرسید:")
     if question:
         answer = restaurant_assistant(question)
-        st.markdown(f"**پاسخ دستیار:**\n\n{answer}")
+        st.markdown(
+            f"<div style='background-color: #f0f0f0; padding: 10px; border-radius: 8px;'>"
+            f"**پاسخ دستیار:**<br>{answer}</div>",
+            unsafe_allow_html=True
+        )
