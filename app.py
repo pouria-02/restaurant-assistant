@@ -9,7 +9,7 @@ api_key = os.environ.get("GOOGLE_API_KEY")
 MODEL_NAME = "gemini-2.0-flash-exp"
 llm = ChatGoogleGenerativeAI(model=MODEL_NAME, api_key=api_key)
 
-# منوی نمونه با دسته‌بندی
+# منو با دسته‌بندی
 menu = {
     "فست فود": {
         "پیتزا مارگاریتا": "خمیر نازک، سس گوجه‌فرنگی، پنیر موتزارلا، ریحان تازه",
@@ -45,88 +45,25 @@ def restaurant_assistant(question):
     response = llm.invoke(msg)
     return response.content
 
-# ===== CSS برای Navbar تمام عرض =====
-st.markdown("""
-<style>
-div.block-container {
-    padding: 2rem 3rem;
-    max-width: 95%;
-}
-h1 {
-    line-height: 1.3;
-}
-.tab-header {
-    display: flex;
-    justify-content: space-around;
-    background-color: #ff6600;
-    color: white;
-    padding: 10px 0;
-    border-radius: 8px;
-}
-.tab-header div {
-    flex: 1;
-    text-align: center;
-    cursor: pointer;
-    font-weight: bold;
-}
-.tab-header div:hover {
-    background-color: #ff8533;
-}
-.selected-tab {
-    background-color: #ffffff !important;
-    color: #ff6600 !important;
-    border-radius: 8px;
-}
-.food-card {
-    padding:10px; 
-    margin-bottom:8px; 
-    border-bottom:1px solid #cccccc;
-}
-.food-name {
-    color: #0066cc; 
-    font-size:16px; 
-    font-weight:bold;
-}
-.food-ingredients {
-    font-size:14px;
-}
-.answer-box {
-    background-color: #f0f0f0; 
-    padding: 15px; 
-    border-radius: 10px; 
-    font-size:15px;
-}
-</style>
-""", unsafe_allow_html=True)
-
 # ===== UI =====
 st.markdown("<h1 style='text-align: center; color: #ff6600;'>🍽️ منوی رستوران نمونه</h1>", unsafe_allow_html=True)
 
-# ===== Tabs با انتخاب دسته =====
-categories = list(menu.keys())
-if "selected_tab" not in st.session_state:
-    st.session_state.selected_tab = categories[0]
+# انتخاب دسته‌بندی
+category = st.selectbox("دسته منو را انتخاب کنید:", list(menu.keys()))
 
-# نمایش Navbar
-cols = st.columns(len(categories))
-for i, cat in enumerate(categories):
-    if cols[i].button(cat):
-        st.session_state.selected_tab = cat
+# نمایش منو آن دسته
+st.subheader(f"📋 {category}")
+with st.expander("نمایش منو"):
+    for dish, ingredients in menu[category].items():
+        st.markdown(f"<span style='color: #0066cc;'>**{dish}**</span>: {ingredients}", unsafe_allow_html=True)
 
-# نمایش غذاها
-st.subheader(f"📋 {st.session_state.selected_tab}")
-for dish, ingredients in menu[st.session_state.selected_tab].items():
-    st.markdown(f"""
-    <div class='food-card'>
-        <span class='food-name'>{dish}</span><br>
-        <span class='food-ingredients'>{ingredients}</span>
-    </div>
-    """, unsafe_allow_html=True)
-
-# بخش پرسش و پاسخ AI
-st.markdown("---")
+# سوال و جواب AI
 st.subheader("💬 پرسش و پاسخ")
 question = st.text_input("سوال خود را بپرسید:")
 if question:
     answer = restaurant_assistant(question)
-    st.markdown(f"<div class='answer-box'>**پاسخ دستیار:**<br>{answer}</div>", unsafe_allow_html=True)
+    st.markdown(
+        f"<div style='background-color: #f0f0f0; padding: 10px; border-radius: 8px;'>"
+        f"**پاسخ دستیار:**<br>{answer}</div>",
+        unsafe_allow_html=True
+    )
