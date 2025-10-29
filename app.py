@@ -46,20 +46,14 @@ def restaurant_assistant(question):
     response = llm.invoke(msg)
     return response.content
 
-# ===== CSS برای فاصله و واکنش‌گرایی =====
+# ===== CSS برای واکنش‌گرایی و فاصله =====
 st.markdown("""
 <style>
-body {
-    font-family: 'Arial', sans-serif;
-}
 div.block-container {
-    padding-top: 2rem;
-    padding-bottom: 2rem;
-    padding-left: 3rem;
-    padding-right: 3rem;
+    padding: 2rem 3rem;
     max-width: 95%;
 }
-h1, h2, h3 {
+h1 {
     line-height: 1.3;
 }
 </style>
@@ -75,7 +69,12 @@ for i, category in enumerate(menu.keys()):
     with tabs[i]:
         st.subheader(f"📋 {category}")
         for dish, ingredients in menu[category].items():
-            st.markdown(f"<span style='color: #0066cc; font-size:16px;'>**{dish}**</span>: {ingredients}", unsafe_allow_html=True)
+            st.markdown(f"""
+            <div style='padding:10px; margin-bottom:8px; border-bottom:1px solid #cccccc;'>
+                <span style='color: #0066cc; font-size:16px; font-weight:bold;'>{dish}</span><br>
+                <span style='font-size:14px;'>{ingredients}</span>
+            </div>
+            """, unsafe_allow_html=True)
 
 # سوال و جواب AI
 st.markdown("---")
