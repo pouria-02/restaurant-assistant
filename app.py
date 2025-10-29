@@ -46,7 +46,7 @@ def restaurant_assistant(question):
     response = llm.invoke(msg)
     return response.content
 
-# ===== CSS برای فاصله و واکنش‌گرایی =====
+# ===== CSS برای واکنش‌گرایی و فاصله =====
 st.markdown("""
 <style>
 div.block-container {
