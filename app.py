@@ -82,7 +82,7 @@ with col2:
 # 📱 QR Code و آدرس دسترسی
 # -----------------------
 local_ip = get_local_ip()
-app_url = f"http://{local_ip}:8501"
+app_url = "https://restaurant-assistant-wne4pww28hatw2fgiqxpj8.streamlit.app/"
 
 st.divider()
 st.subheader("📱 دسترسی از گوشی یا دستگاه دیگر")
