@@ -31,7 +31,7 @@ menu = {
     }
 }
 
-# تابع دستیار رستوران
+# دستیار رستوران
 def restaurant_assistant(question):
     system_prompt = (
         "تو یک دستیار رستوران هستی. فقط درباره‌ی غذاهای منوی زیر پاسخ بده. "
@@ -46,7 +46,26 @@ def restaurant_assistant(question):
     response = llm.invoke(msg)
     return response.content
 
-# ===== UI رنگی =====
+# ===== CSS برای فاصله و واکنش‌گرایی =====
+st.markdown("""
+<style>
+body {
+    font-family: 'Arial', sans-serif;
+}
+div.block-container {
+    padding-top: 2rem;
+    padding-bottom: 2rem;
+    padding-left: 3rem;
+    padding-right: 3rem;
+    max-width: 95%;
+}
+h1, h2, h3 {
+    line-height: 1.3;
+}
+</style>
+""", unsafe_allow_html=True)
+
+# ===== UI =====
 st.markdown("<h1 style='text-align: center; color: #ff6600;'>🍽️ منوی رستوران نمونه</h1>", unsafe_allow_html=True)
 
 # Tabs برای دسته‌ها
@@ -56,16 +75,16 @@ for i, category in enumerate(menu.keys()):
     with tabs[i]:
         st.subheader(f"📋 {category}")
         for dish, ingredients in menu[category].items():
-            st.markdown(f"<span style='color: #0066cc;'>**{dish}**</span>: {ingredients}", unsafe_allow_html=True)
+            st.markdown(f"<span style='color: #0066cc; font-size:16px;'>**{dish}**</span>: {ingredients}", unsafe_allow_html=True)
 
-# بخش سوال و جواب AI زیر تب‌ها
+# سوال و جواب AI
 st.markdown("---")
 st.subheader("💬 پرسش و پاسخ")
 question = st.text_input("سوال خود را بپرسید:")
 if question:
     answer = restaurant_assistant(question)
     st.markdown(
-        f"<div style='background-color: #f0f0f0; padding: 10px; border-radius: 8px;'>"
+        f"<div style='background-color: #f0f0f0; padding: 15px; border-radius: 10px; font-size:15px;'>"
         f"**پاسخ دستیار:**<br>{answer}</div>",
         unsafe_allow_html=True
     )
