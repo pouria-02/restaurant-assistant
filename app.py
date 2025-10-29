@@ -2,20 +2,15 @@ import streamlit as st
 from langchain_google_genai import ChatGoogleGenerativeAI
 from langchain_core.messages import HumanMessage
 import os
-import streamlit.components.v1 as components
-from tempfile import NamedTemporaryFile
-import base64
-import openai
 
-# API Key ها
-api_key = os.environ.get("GOOGLE_API_KEY")          # Google Gemini
-openai_api_key = os.environ.get("OPENAI_API_KEY")   # Whisper
+# API Key
+api_key = os.environ.get("GOOGLE_API_KEY")
 
 # مدل Google Gemini
 MODEL_NAME = "gemini-2.0-flash-exp"
 llm = ChatGoogleGenerativeAI(model=MODEL_NAME, api_key=api_key)
 
-# منوی نمونه
+# منوی نمونه با دسته‌بندی
 menu = {
     "فست فود": {
         "پیتزا مارگاریتا": "خمیر نازک، سس گوجه‌فرنگی، پنیر موتزارلا، ریحان تازه",
@@ -39,33 +34,51 @@ menu = {
 # دستیار رستوران
 def restaurant_assistant(question):
     system_prompt = (
-        "تو یه دستیار رستوران هستی و با لحنی صمیمی جواب بده. "
-        "فقط درباره‌ی غذاهای منو جواب بده. "
-        "اگر سوال نامرتبط بود بگو: «من فقط درباره‌ی منو می‌تونم کمکت کنم :)»\n\n"
-        "اگر کاربر درباره‌ی مواد تشکیل‌دهنده‌ی هر غذا پرسید، خواص و نحوه تهیه کوتاه توضیح بده.\n\n"
-        f"منو:\n{menu}"
-    )
+    "تو یه دستیار رستوران هستی و با لحنی صمیمی با مشتری‌ها صحبت می‌کنی. "
+    "فقط درباره‌ی غذاهای منوی زیر جواب بده. "
+    "اگر سوال ربطی به منو یا مواد تشکیل‌دهنده‌ی غذاها نداشت، با خوشرویی بگو: "
+    "«من فقط درباره‌ی منو می‌تونم کمکت کنم :)»\n\n"
+    "اگر کاربر درباره‌ی مواد تشکیل‌دهنده‌ی هر غذا پرسید، "
+    "با لحن دوستانه درباره اون ماده توضیح بده، خواصش رو بگو و اگر قابل درست کردن در خونه هست، "
+    "به طور خلاصه روش تهیه‌ش رو هم بگو.\n\n"
+    f"منو:\n{menu}"
+)
     msg = [HumanMessage(content=f"{system_prompt}\n\nسؤال مشتری: {question}")]
     response = llm.invoke(msg)
     return response.content
 
-# ===== CSS برای UI =====
+# ===== CSS برای واکنش‌گرایی و فاصله =====
 st.markdown("""
 <style>
-div.block-container { padding: 2rem 3rem; max-width: 95%; }
-h1 { line-height: 1.3; }
-.food-card { padding:10px; margin-bottom:8px; border-bottom:1px solid #cccccc; }
-.food-name { color: #0066cc; font-size:16px; font-weight:bold; }
-.food-ingredients { font-size:14px; }
-input[type=text] { width: 80%; display: inline-block; }
-button#record-btn { display: inline-block; margin-left: 10px; padding: 8px 12px; }
+div.block-container {
+    padding: 2rem 3rem;
+    max-width: 95%;
+}
+h1 {
+    line-height: 1.3;
+}
+.food-card {
+    padding:10px; 
+    margin-bottom:8px; 
+    border-bottom:1px solid #cccccc;
+}
+.food-name {
+    color: #0066cc; 
+    font-size:16px; 
+    font-weight:bold;
+}
+.food-ingredients {
+    font-size:14px;
+}
 </style>
 """, unsafe_allow_html=True)
 
-# ===== نمایش منو =====
-st.markdown("<h1 style='text-align:center; color:#ff6600;'>🍽️ منوی رستوران نمونه</h1>", unsafe_allow_html=True)
+# ===== UI =====
+st.markdown("<h1 style='text-align: center; color: #ff6600;'>🍽️ منوی رستوران نمونه</h1>", unsafe_allow_html=True)
 
+# Tabs برای دسته‌ها
 tabs = st.tabs(list(menu.keys()))
+
 for i, category in enumerate(menu.keys()):
     with tabs[i]:
         st.subheader(f"📋 {category}")
@@ -77,46 +90,17 @@ for i, category in enumerate(menu.keys()):
             </div>
             """, unsafe_allow_html=True)
 
-# ===== بخش سوال و جواب =====
+# سوال و جواب AI
 st.markdown("---")
 st.subheader("💬 پرسش و پاسخ")
-
-# ورودی متن + دکمه ضبط ویس
-st.markdown("""
-<div>
-<input id="text-input" type="text" placeholder="سوال خود را تایپ کنید..." />
-<button id="record-btn">🎤 ضبط ویس</button>
-</div>
-""", unsafe_allow_html=True)
-
-# HTML + JS برای ضبط ویس داخل مرورگر
-components.html("""
-<audio id="audio" controls></audio>
-<script>
-let chunks = [];
-let mediaRecorder;
-navigator.mediaDevices.getUserMedia({ audio: true }).then(stream => {
-    mediaRecorder = new MediaRecorder(stream);
-    mediaRecorder.ondataavailable = e => chunks.push(e.data);
-    mediaRecorder.onstop = e => {
-        let blob = new Blob(chunks, { 'type': 'audio/wav; codecs=MS_PCM' });
-        let url = URL.createObjectURL(blob);
-        document.getElementById('audio').src = url;
-        const reader = new FileReader();
-        reader.readAsDataURL(blob);
-        reader.onloadend = function() {
-            const base64data = reader.result;
-            window.parent.postMessage({type:'audio', data: base64data}, '*');
-        }
-        chunks = [];
-    };
-});
-document.getElementById('record-btn').onclick = () => mediaRecorder.start();
-document.getElementById('record-btn').ondblclick = () => mediaRecorder.stop();
-</script>
-""", height=200)
-
-# ===== نمایش پاسخ =====
-# توجه: برای تکمیل کامل دریافت ویس از JS و پردازش در Python، باید Streamlit Custom Components یا st_js_state استفاده کرد.
-# در حال حاضر، نسخه پایه با آپلود فایل wav ساده تره.
-st.markdown("ℹ️ ضبط ویس مستقیماً داخل مرورگر در نسخه Streamlit Cloud نیاز به Component پیشرفته دارد. برای تست، می‌توانید از آپلود فایل wav استفاده کنید.")
+question = st.text_input("سوال خود را بپرسید:")
+if question:
+    answer = restaurant_assistant(question)
+    st.markdown(
+        f"""
+        <div style='background-color: white; color: black; padding: 15px; border-radius: 10px; font-size:15px;'>
+            <strong>پاسخ دستیار:</strong><br>{answer}
+        </div>
+        """,
+        unsafe_allow_html=True
+    )
