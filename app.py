@@ -15,11 +15,11 @@ menu = {
     "فست فود": {
         "پیتزا مارگاریتا": {
             "desc": "خمیر نازک، سس گوجه‌فرنگی، پنیر موتزارلا، ریحان تازه",
-            "img": "margharita.jpeg"
+            #"img": "margharita.jpeg"
         },
         "پیتزا پپرونی": {
             "desc": "خمیر نازک، سس گوجه‌فرنگی، پنیر موتزارلا، پپرونی",
-            "img": "pepperoni.jpeg"
+            "img": "https://pizzamaruusa.com/wp-content/uploads/2016/01/Pepperoni-Pizza.jpg"
         },
         "برگر کلاسیک": {
             "desc": "گوشت گوساله، نان برگر، پنیر چدار، کاهو، گوجه، سس مخصوص",
