@@ -2,10 +2,6 @@ import streamlit as st
 from langchain_google_genai import ChatGoogleGenerativeAI
 from langchain_core.messages import HumanMessage
 import os
-from streamlit_webrtc import webrtc_streamer, AudioProcessorBase, WebRtcMode
-
-import tempfile
-import speech_recognition as sr
 
 # API Key
 api_key = os.environ.get("GOOGLE_API_KEY")
@@ -14,8 +10,53 @@ api_key = os.environ.get("GOOGLE_API_KEY")
 MODEL_NAME = "gemini-2.0-flash-exp"
 llm = ChatGoogleGenerativeAI(model=MODEL_NAME, api_key=api_key)
 
-# منوی نمونه با دسته‌بندی و عکس (همون قبلی)
-menu = { ... }  # از کد قبلی استفاده کن
+# منوی نمونه با دسته‌بندی و عکس
+menu = {
+    "فست فود": {
+        "پیتزا مارگاریتا": {
+            "desc": "خمیر نازک، سس گوجه‌فرنگی، پنیر موتزارلا، ریحان تازه",
+            "img": "https://raw.githubusercontent.com/pouria-02/restaurant-assistant/main/margharita.jpeg"
+        },
+        "پیتزا پپرونی": {
+            "desc": "خمیر نازک، سس گوجه‌فرنگی، پنیر موتزارلا، پپرونی",
+            "img": "https://raw.githubusercontent.com/pouria-02/restaurant-assistant/main/Pepperoni.jpg"
+        },
+        "برگر کلاسیک": {
+            "desc": "گوشت گوساله، نان برگر، پنیر چدار، کاهو، گوجه، سس مخصوص",
+            "img": "https://raw.githubusercontent.com/pouria-02/restaurant-assistant/main/classic_burger.jpeg"
+        },
+    },
+    "صبحانه": {
+        "املت سبزیجات": {
+            "desc": "تخم مرغ، فلفل دلمه‌ای، گوجه، سبزیجات تازه",
+            "img": "https://raw.githubusercontent.com/pouria-02/restaurant-assistant/main/omellete.jpg"
+        },
+        "پنکیک با عسل": {
+            "desc": "آرد، شیر، تخم مرغ، عسل، کره",
+            "img": "https://raw.githubusercontent.com/pouria-02/restaurant-assistant/main/honey.jpg"
+        },
+    },
+    "قهوه": {
+        "کاپوچینو": {
+            "desc": "اسپرسو، شیر کف دار، شکلات پودر",
+            "img": "https://raw.githubusercontent.com/pouria-02/restaurant-assistant/main/capp.jpg"
+        },
+        "لاته": {
+            "desc": "اسپرسو، شیر بخار داده شده",
+            "img": "https://raw.githubusercontent.com/pouria-02/restaurant-assistant/main/latte.jpg"
+        },
+    },
+    "پیش غذا": {
+        "سالاد سزار": {
+            "desc": "کاهو رومی، مرغ گریل‌شده، پنیر پارمزان، کروتون، سس سزار",
+            "img": "Pepperoni.jpg"
+        },
+        "سالاد یونانی": {
+            "desc": "کاهو، گوجه، خیار، زیتون، پنیر فتا، روغن زیتون",
+            "img": "Pepperoni.jpg"
+        },
+    }
+}
 
 # دستیار رستوران
 def restaurant_assistant(question):
@@ -33,11 +74,50 @@ def restaurant_assistant(question):
     response = llm.invoke(msg)
     return response.content
 
+# ===== CSS برای واکنش‌گرایی و زیبایی =====
+st.markdown("""
+<style>
+div.block-container {
+    padding: 2rem 3rem;
+    max-width: 95%;
+}
+.food-card {
+    display: flex;
+    align-items: center;
+    margin-bottom: 15px;
+    padding: 10px;
+    border-bottom: 1px solid #ddd;
+    border-radius: 8px;
+}
+.food-img {
+    width: 100px;
+    height: 100px;
+    border-radius: 10px;
+    margin-right: 15px;
+    object-fit: cover;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+}
+.food-info {
+    flex-grow: 1;
+}
+.food-name {
+    color: #ff6600;
+    font-size: 18px;
+    font-weight: bold;
+}
+.food-ingredients {
+    font-size: 14px;
+    color: white;
+}
+</style>
+""", unsafe_allow_html=True)
+
 # ===== UI =====
 st.markdown("<h1 style='text-align: center; color: #ff6600;'>🍽️ منوی رستوران نمونه</h1>", unsafe_allow_html=True)
 
-# نمایش منو
+# Tabs برای دسته‌ها
 tabs = st.tabs(list(menu.keys()))
+
 for i, category in enumerate(menu.keys()):
     with tabs[i]:
         st.subheader(f"📋 {category}")
@@ -52,42 +132,21 @@ for i, category in enumerate(menu.keys()):
             </div>
             """, unsafe_allow_html=True)
 
+# سوال و جواب AI با فرم و دکمه ارسال
 st.markdown("---")
 st.subheader("💬 بپرس از دستیار رستوران!")
 
-# ورودی متن
 with st.form("chat_form"):
-    text_question = st.text_input("سوال خود را بنویس یا بپرس:")
+    question = st.text_input("سوال خود را بنویس یا بپرس:")
     submit_button = st.form_submit_button("ارسال")
-    if submit_button and text_question.strip() != "":
-        answer = restaurant_assistant(text_question)
-        st.markdown(f"<div style='background-color: white; color: black; padding: 15px; border-radius: 10px;'>{answer}</div>", unsafe_allow_html=True)
 
-st.markdown("🎤 یا میکروفون خود را استفاده کنید:")
-
-# ضبط صوتی
-webrtc_ctx = webrtc_streamer(
-    key="speech-input",
-    mode=WebRtcMode.SENDONLY,
-    audio_receiver_size=1024,
-)
-
-if webrtc_ctx.audio_receiver:
-    audio_frames = webrtc_ctx.audio_receiver.get_frames(timeout=1)
-    if audio_frames:
-        # ذخیره به فایل موقت
-        with tempfile.NamedTemporaryFile(suffix=".wav", delete=False) as tmp_file:
-            tmp_file_path = tmp_file.name
-            audio_frames[0].to_file(tmp_file_path)  # اولین فریم را ذخیره می‌کنیم
-
-        # تبدیل صوت به متن
-        r = sr.Recognizer()
-        with sr.AudioFile(tmp_file_path) as source:
-            audio_data = r.record(source)
-            try:
-                voice_text = r.recognize_google(audio_data, language="fa-IR")
-                st.markdown(f"**🗣️ شما گفتید:** {voice_text}")
-                answer = restaurant_assistant(voice_text)
-                st.markdown(f"<div style='background-color: white; color: black; padding: 15px; border-radius: 10px;'>{answer}</div>", unsafe_allow_html=True)
-            except:
-                st.warning("صدای شما قابل تشخیص نیست. لطفاً دوباره صحبت کنید.")
+    if submit_button and question.strip() != "":
+        answer = restaurant_assistant(question)
+        st.markdown(
+            f"""
+            <div style='background-color: white; color: black; padding: 15px; border-radius: 10px; font-size:15px;'>
+                <strong>🍳 پاسخ دستیار:</strong><br>{answer}
+            </div>
+            """,
+            unsafe_allow_html=True
+        )
