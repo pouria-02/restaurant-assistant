@@ -3,9 +3,6 @@ from langchain_google_genai import ChatGoogleGenerativeAI
 from langchain_core.messages import HumanMessage
 import os
 
-
-import os
-BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 # API Key
 api_key = os.environ.get("GOOGLE_API_KEY")
 
