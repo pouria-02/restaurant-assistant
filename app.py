@@ -136,42 +136,29 @@ for i, category in enumerate(menu.keys()):
             """, unsafe_allow_html=True)
 
 # سوال و جواب AI با فرم و دکمه ارسال
-st.markdown("---")
-st.subheader("💬 بپرس از دستیار رستوران (متن یا صدا)")
+from streamlit_webrtc import webrtc_streamer, WebRtcMode
+import speech_recognition as sr
+import tempfile
 
-with st.form("chat_form"):
-    # ورودی متن
-    question_text = st.text_input("سوال خود را بنویس یا بپرس:")
+st.subheader("💬 میکروفن")
 
-    # دکمه میکروفن
-    audio_bytes = webrtc_streamer(
-        key="mic",
-        mode=WebRtcMode.SENDONLY,
-        audio_receiver_size=1024,
-    )
+webrtc_ctx = webrtc_streamer(
+    key="mic",
+    mode=WebRtcMode.SENDONLY,
+    audio_receiver_size=1024,
+)
 
-    submit_button = st.form_submit_button("ارسال")
-
-    # تبدیل صدا به متن اگر میکروفن فعال بود
-    if audio_bytes:
+if webrtc_ctx.audio_receiver:
+    audio_frames = webrtc_ctx.audio_receiver.get_frames(timeout=1)
+    if audio_frames:
         recognizer = sr.Recognizer()
         with tempfile.NamedTemporaryFile(suffix=".wav") as temp_wav:
-            audio_bytes.audio.to_wav(temp_wav.name)
+            # تبدیل فریم‌ها به WAV
+            audio_frames[0].to_wav(temp_wav.name)  # فقط اولین فریم نمونه
             with sr.AudioFile(temp_wav.name) as source:
                 audio_data = recognizer.record(source)
                 try:
-                    question_text = recognizer.recognize_google(audio_data, language="fa-IR")
+                    text = recognizer.recognize_google(audio_data, language="fa-IR")
+                    st.write("متن تبدیل شده:", text)
                 except sr.UnknownValueError:
                     st.warning("صدای شما قابل تشخیص نبود!")
-
-    # ارسال سوال
-    if submit_button and question_text.strip() != "":
-        answer = restaurant_assistant(question_text)
-        st.markdown(
-            f"""
-            <div style='background-color: white; color: black; padding: 15px; border-radius: 10px; font-size:15px;'>
-                <strong>🍳 پاسخ دستیار:</strong><br>{answer}
-            </div>
-            """,
-            unsafe_allow_html=True
-        )
