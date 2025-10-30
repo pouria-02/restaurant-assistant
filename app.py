@@ -2,9 +2,6 @@ import streamlit as st
 from langchain_google_genai import ChatGoogleGenerativeAI
 from langchain_core.messages import HumanMessage
 import os
-from streamlit_webrtc import webrtc_streamer, AudioProcessorBase, WebRtcMode
-import speech_recognition as sr
-import tempfile
 
 # API Key
 api_key = os.environ.get("GOOGLE_API_KEY")
@@ -136,29 +133,20 @@ for i, category in enumerate(menu.keys()):
             """, unsafe_allow_html=True)
 
 # سوال و جواب AI با فرم و دکمه ارسال
-from streamlit_webrtc import webrtc_streamer, WebRtcMode
-import speech_recognition as sr
-import tempfile
+st.markdown("---")
+st.subheader("💬 بپرس از دستیار رستوران!")
 
-st.subheader("💬 میکروفن")
+with st.form("chat_form"):
+    question = st.text_input("سوال خود را بنویس یا بپرس:")
+    submit_button = st.form_submit_button("ارسال")
 
-webrtc_ctx = webrtc_streamer(
-    key="mic",
-    mode=WebRtcMode.SENDONLY,
-    audio_receiver_size=1024,
-)
-
-if webrtc_ctx.audio_receiver:
-    audio_frames = webrtc_ctx.audio_receiver.get_frames(timeout=1)
-    if audio_frames:
-        recognizer = sr.Recognizer()
-        with tempfile.NamedTemporaryFile(suffix=".wav") as temp_wav:
-            # تبدیل فریم‌ها به WAV
-            audio_frames[0].to_wav(temp_wav.name)  # فقط اولین فریم نمونه
-            with sr.AudioFile(temp_wav.name) as source:
-                audio_data = recognizer.record(source)
-                try:
-                    text = recognizer.recognize_google(audio_data, language="fa-IR")
-                    st.write("متن تبدیل شده:", text)
-                except sr.UnknownValueError:
-                    st.warning("صدای شما قابل تشخیص نبود!")
+    if submit_button and question.strip() != "":
+        answer = restaurant_assistant(question)
+        st.markdown(
+            f"""
+            <div style='background-color: white; color: black; padding: 15px; border-radius: 10px; font-size:15px;'>
+                <strong>🍳 پاسخ دستیار:</strong><br>{answer}
+            </div>
+            """,
+            unsafe_allow_html=True
+        )
