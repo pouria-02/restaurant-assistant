@@ -141,8 +141,14 @@ st.subheader("💬 بپرس از دستیار رستوران!")
 question = st.text_input("سؤال خود را بنویس یا بپرس:")
 
 # دکمه ارسال
-if st.button("ارسال"):
-    if question.strip() != "":
+st.markdown("---")
+st.subheader("💬 بپرس از دستیار رستوران!")
+
+with st.form("chat_form"):
+    question = st.text_input("سوال خود را بنویس یا بپرس:")
+    submit_button = st.form_submit_button("ارسال")
+
+    if submit_button and question.strip() != "":
         answer = restaurant_assistant(question)
         st.markdown(
             f"""
@@ -152,5 +158,3 @@ if st.button("ارسال"):
             """,
             unsafe_allow_html=True
         )
-    else:
-        st.warning("لطفا اول سوال خود را وارد کنید.")
