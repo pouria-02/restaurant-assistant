@@ -1,15 +1,10 @@
-
-
 import streamlit as st
 from langchain_google_genai import ChatGoogleGenerativeAI
 from langchain_core.messages import HumanMessage
-from streamlit_audio_recorder import st_audiorec
-import os, io
-import openai
+import os
 
 # API Key
 api_key = os.environ.get("GOOGLE_API_KEY")
-openai.api_key = os.environ.get("OPENAI_API_KEY")  # برای Whisper
 
 # مدل Google Gemini
 MODEL_NAME = "gemini-2.0-flash-exp"
@@ -18,21 +13,48 @@ llm = ChatGoogleGenerativeAI(model=MODEL_NAME, api_key=api_key)
 # منوی نمونه با دسته‌بندی و عکس
 menu = {
     "فست فود": {
-        "پیتزا مارگاریتا": {"desc": "خمیر نازک، سس گوجه‌فرنگی، پنیر موتزارلا، ریحان تازه", "img": "https://raw.githubusercontent.com/pouria-02/restaurant-assistant/main/margharita.jpeg"},
-        "پیتزا پپرونی": {"desc": "خمیر نازک، سس گوجه‌فرنگی، پنیر موتزارلا، پپرونی", "img": "https://raw.githubusercontent.com/pouria-02/restaurant-assistant/main/Pepperoni.jpg"},
-        "برگر کلاسیک": {"desc": "گوشت گوساله، نان برگر، پنیر چدار، کاهو، گوجه، سس مخصوص", "img": "https://raw.githubusercontent.com/pouria-02/restaurant-assistant/main/classic_burger.jpeg"},
+        "پیتزا مارگاریتا": {
+            "desc": "خمیر نازک، سس گوجه‌فرنگی، پنیر موتزارلا، ریحان تازه",
+            "img": "https://raw.githubusercontent.com/pouria-02/restaurant-assistant/main/margharita.jpeg"
+        },
+        "پیتزا پپرونی": {
+            "desc": "خمیر نازک، سس گوجه‌فرنگی، پنیر موتزارلا، پپرونی",
+            "img": "https://raw.githubusercontent.com/pouria-02/restaurant-assistant/main/Pepperoni.jpg"
+        },
+        "برگر کلاسیک": {
+            "desc": "گوشت گوساله، نان برگر، پنیر چدار، کاهو، گوجه، سس مخصوص",
+            "img": "https://raw.githubusercontent.com/pouria-02/restaurant-assistant/main/classic_burger.jpeg"
+        },
     },
     "صبحانه": {
-        "املت سبزیجات": {"desc": "تخم مرغ، فلفل دلمه‌ای، گوجه، سبزیجات تازه", "img": "https://raw.githubusercontent.com/pouria-02/restaurant-assistant/main/omellete.jpg"},
-        "پنکیک با عسل": {"desc": "آرد، شیر، تخم مرغ، عسل، کره", "img": "https://raw.githubusercontent.com/pouria-02/restaurant-assistant/main/honey.jpg"},
+        "املت سبزیجات": {
+            "desc": "تخم مرغ، فلفل دلمه‌ای، گوجه، سبزیجات تازه",
+            "img": "https://raw.githubusercontent.com/pouria-02/restaurant-assistant/main/omellete.jpg"
+        },
+        "پنکیک با عسل": {
+            "desc": "آرد، شیر، تخم مرغ، عسل، کره",
+            "img": "https://raw.githubusercontent.com/pouria-02/restaurant-assistant/main/honey.jpg"
+        },
     },
     "قهوه": {
-        "کاپوچینو": {"desc": "اسپرسو، شیر کف دار، شکلات پودر", "img": "https://raw.githubusercontent.com/pouria-02/restaurant-assistant/main/capp.jpg"},
-        "لاته": {"desc": "اسپرسو، شیر بخار داده شده", "img": "https://raw.githubusercontent.com/pouria-02/restaurant-assistant/main/latte.jpg"},
+        "کاپوچینو": {
+            "desc": "اسپرسو، شیر کف دار، شکلات پودر",
+            "img": "https://raw.githubusercontent.com/pouria-02/restaurant-assistant/main/capp.jpg"
+        },
+        "لاته": {
+            "desc": "اسپرسو، شیر بخار داده شده",
+            "img": "https://raw.githubusercontent.com/pouria-02/restaurant-assistant/main/latte.jpg"
+        },
     },
     "پیش غذا": {
-        "سالاد سزار": {"desc": "کاهو رومی، مرغ گریل‌شده، پنیر پارمزان، کروتون، سس سزار", "img": "https://raw.githubusercontent.com/pouria-02/restaurant-assistant/main/Pepperoni.jpg"},
-        "سالاد یونانی": {"desc": "کاهو، گوجه، خیار، زیتون، پنیر فتا، روغن زیتون", "img": "https://raw.githubusercontent.com/pouria-02/restaurant-assistant/main/Pepperoni.jpg"},
+        "سالاد سزار": {
+            "desc": "کاهو رومی، مرغ گریل‌شده، پنیر پارمزان، کروتون، سس سزار",
+            "img": "Pepperoni.jpg"
+        },
+        "سالاد یونانی": {
+            "desc": "کاهو، گوجه، خیار، زیتون، پنیر فتا، روغن زیتون",
+           "img": "Pepperoni.jpg"
+        },
     }
 }
 
@@ -52,22 +74,50 @@ def restaurant_assistant(question):
     response = llm.invoke(msg)
     return response.content
 
-# ===== CSS =====
+# ===== CSS برای واکنش‌گرایی و زیبایی =====
 st.markdown("""
 <style>
-div.block-container {padding:2rem 3rem; max-width:95%;}
-.food-card {display:flex; align-items:center; margin-bottom:15px; padding:10px; border-bottom:1px solid #ddd; border-radius:8px;}
-.food-img {width:100px; height:100px; border-radius:10px; margin-right:15px; object-fit:cover; box-shadow:0 4px 8px rgba(0,0,0,0.2);}
-.food-info {flex-grow:1;}
-.food-name {color:#ff6600; font-size:18px; font-weight:bold;}
-.food-ingredients {font-size:14px; color:#444;}
+div.block-container {
+    padding: 2rem 3rem;
+    max-width: 95%;
+}
+.food-card {
+    display: flex;
+    align-items: center;
+    margin-bottom: 15px;
+    padding: 10px;
+    border-bottom: 1px solid #ddd;
+    border-radius: 8px;
+}
+.food-img {
+    width: 100px;
+    height: 100px;
+    border-radius: 10px;
+    margin-right: 15px;
+    object-fit: cover;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+}
+.food-info {
+    flex-grow: 1;
+}
+.food-name {
+    color: #ff6600;
+    font-size: 18px;
+    font-weight: bold;
+}
+.food-ingredients {
+    font-size: 14px;
+    color: #444;
+}
 </style>
 """, unsafe_allow_html=True)
 
 # ===== UI =====
-st.markdown("<h1 style='text-align:center; color:#ff6600;'>🍽️ منوی رستوران نمونه</h1>", unsafe_allow_html=True)
+st.markdown("<h1 style='text-align: center; color: #ff6600;'>🍽️ منوی رستوران نمونه</h1>", unsafe_allow_html=True)
 
+# Tabs برای دسته‌ها
 tabs = st.tabs(list(menu.keys()))
+
 for i, category in enumerate(menu.keys()):
     with tabs[i]:
         st.subheader(f"📋 {category}")
@@ -82,31 +132,15 @@ for i, category in enumerate(menu.keys()):
             </div>
             """, unsafe_allow_html=True)
 
-# ===== سوال و جواب AI + ویس =====
+# سوال و جواب AI
 st.markdown("---")
 st.subheader("💬 بپرس از دستیار رستوران!")
-
-col1, col2 = st.columns([4,1])
-with col1:
-    question_text = st.text_input("سؤال خود را بنویس یا بپرس:")
-
-with col2:
-    audio_bytes = st_audiorec()
-    
-if audio_bytes is not None:
-    st.audio(audio_bytes, format="audio/wav")
-    transcript = openai.Audio.transcriptions.create(
-        model="whisper-1",
-        file=io.BytesIO(audio_bytes)
-    )
-    question_text = transcript.text
-    st.markdown(f"🎤 متن تشخیص داده شده: {question_text}")
-
-if question_text:
-    answer = restaurant_assistant(question_text)
+question = st.text_input("سؤال خود را بنویس یا بپرس:")
+if question:
+    answer = restaurant_assistant(question)
     st.markdown(
         f"""
-        <div style='background-color:white; color:white; padding:15px; border-radius:10px; font-size:15px;'>
+        <div style='background-color: white; color: black; padding: 15px; border-radius: 10px; font-size:15px;'>
             <strong>🍳 پاسخ دستیار:</strong><br>{answer}
         </div>
         """,
