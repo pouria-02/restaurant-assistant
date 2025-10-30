@@ -133,18 +133,24 @@ for i, category in enumerate(menu.keys()):
             """, unsafe_allow_html=True)
 
 # سوال و جواب AI
+# سوال و جواب AI
 st.markdown("---")
 st.subheader("💬 بپرس از دستیار رستوران!")
+
+# ورودی متن
 question = st.text_input("سؤال خود را بنویس یا بپرس:")
-if question:
-    answer = restaurant_assistant(question)
-    st.markdown(
-        f"""
-        <div style='background-color: white; color: black; padding: 15px; border-radius: 10px; font-size:15px;'>
-            <strong>🍳 پاسخ دستیار:</strong><br>{answer}
-        </div>
-        """,
-        unsafe_allow_html=True
-    )
 
-
+# دکمه ارسال
+if st.button("ارسال"):
+    if question.strip() != "":
+        answer = restaurant_assistant(question)
+        st.markdown(
+            f"""
+            <div style='background-color: white; color: black; padding: 15px; border-radius: 10px; font-size:15px;'>
+                <strong>🍳 پاسخ دستیار:</strong><br>{answer}
+            </div>
+            """,
+            unsafe_allow_html=True
+        )
+    else:
+        st.warning("لطفا اول سوال خود را وارد کنید.")
