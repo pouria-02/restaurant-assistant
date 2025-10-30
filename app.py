@@ -29,7 +29,7 @@ menu = {
     "صبحانه": {
         "املت سبزیجات": {
             "desc": "تخم مرغ، فلفل دلمه‌ای، گوجه، سبزیجات تازه",
-            "img": "https://raw.githubusercontent.com/pouria-02/restaurant-assistant/main/omellete.jpeg"
+            "img": "https://raw.githubusercontent.com/pouria-02/restaurant-assistant/main/omellete.jpg"
         },
         "پنکیک با عسل": {
             "desc": "آرد، شیر، تخم مرغ، عسل، کره",
