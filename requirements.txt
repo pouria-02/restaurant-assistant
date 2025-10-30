@@ -5,3 +5,4 @@ qrcode
 pillow
 openai
 soundfile
+streamlit-audio-recorder
