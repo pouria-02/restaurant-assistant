@@ -1,4 +1,4 @@
-!pip install streamlit streamlit-audio-recorder langchain-google-genai langchain-core openai pillow
+
 
 import streamlit as st
 from langchain_google_genai import ChatGoogleGenerativeAI
