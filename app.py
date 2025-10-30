@@ -15,45 +15,45 @@ menu = {
     "فست فود": {
         "پیتزا مارگاریتا": {
             "desc": "خمیر نازک، سس گوجه‌فرنگی، پنیر موتزارلا، ریحان تازه",
-            #"img": "margharita.jpeg"
+            "img": "Pepperoni.jpg"
         },
         "پیتزا پپرونی": {
             "desc": "خمیر نازک، سس گوجه‌فرنگی، پنیر موتزارلا، پپرونی",
-            "img": "https://pizzamaruusa.com/wp-content/uploads/2016/01/Pepperoni-Pizza.jpg"
+            "img": "Pepperoni.jpg"
         },
         "برگر کلاسیک": {
             "desc": "گوشت گوساله، نان برگر، پنیر چدار، کاهو، گوجه، سس مخصوص",
-            #"img": "burger.jpg"
+            "img": "Pepperoni.jpg"
         },
     },
     "صبحانه": {
         "املت سبزیجات": {
             "desc": "تخم مرغ، فلفل دلمه‌ای، گوجه، سبزیجات تازه",
-            #"img": "omelette.jpg"
+            "img": "Pepperoni.jpg"
         },
         "پنکیک با عسل": {
             "desc": "آرد، شیر، تخم مرغ، عسل، کره",
-            #"img": "pancake.jpg"
+            "img": "Pepperoni.jpg"
         },
     },
     "قهوه": {
         "کاپوچینو": {
             "desc": "اسپرسو، شیر کف دار، شکلات پودر",
-            #"img": "cappuccino.jpg"
+            "img": "Pepperoni.jpg"
         },
         "لاته": {
             "desc": "اسپرسو، شیر بخار داده شده",
-            #"img": "latte.jpg"
+            "img": "Pepperoni.jpg"
         },
     },
     "پیش غذا": {
         "سالاد سزار": {
             "desc": "کاهو رومی، مرغ گریل‌شده، پنیر پارمزان، کروتون، سس سزار",
-            #"img": "caesar.jpg"
+            "img": "Pepperoni.jpg"
         },
         "سالاد یونانی": {
             "desc": "کاهو، گوجه، خیار، زیتون، پنیر فتا، روغن زیتون",
-            #"img": "greek.jpg"
+           "img": "Pepperoni.jpg"
         },
     }
 }
