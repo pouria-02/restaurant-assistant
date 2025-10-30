@@ -75,6 +75,7 @@ def restaurant_assistant(question):
     return response.content
 
 # ===== CSS برای واکنش‌گرایی و زیبایی =====
+# ===== CSS برای واکنش‌گرایی و زیبایی =====
 st.markdown("""
 <style>
 div.block-container {
@@ -107,11 +108,14 @@ div.block-container {
 }
 .food-ingredients {
     font-size: 14px;
-    color: #444;
+    color: #222;           /* متن تیره‌تر */
+    background-color: #fefefe;  /* پس‌زمینه روشن */
+    padding: 5px 10px;
+    border-radius: 5px;
+    line-height: 1.6;
 }
 </style>
 """, unsafe_allow_html=True)
-
 # ===== UI =====
 st.markdown("<h1 style='text-align: center; color: #ff6600;'>🍽️ منوی رستوران نمونه</h1>", unsafe_allow_html=True)
 
