@@ -107,7 +107,7 @@ div.block-container {
 }
 .food-ingredients {
     font-size: 14px;
-    color: #444;
+    color: white;
 }
 </style>
 """, unsafe_allow_html=True)
