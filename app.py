@@ -2,6 +2,9 @@ import streamlit as st
 from langchain_google_genai import ChatGoogleGenerativeAI
 from langchain_core.messages import HumanMessage
 import os
+from streamlit_webrtc import webrtc_streamer, AudioProcessorBase, WebRtcMode
+import speech_recognition as sr
+import tempfile
 
 # API Key
 api_key = os.environ.get("GOOGLE_API_KEY")
@@ -134,14 +137,36 @@ for i, category in enumerate(menu.keys()):
 
 # سوال و جواب AI با فرم و دکمه ارسال
 st.markdown("---")
-st.subheader("💬 بپرس از دستیار رستوران!")
+st.subheader("💬 بپرس از دستیار رستوران (متن یا صدا)")
 
 with st.form("chat_form"):
-    question = st.text_input("سوال خود را بنویس یا بپرس:")
+    # ورودی متن
+    question_text = st.text_input("سوال خود را بنویس یا بپرس:")
+
+    # دکمه میکروفن
+    audio_bytes = webrtc_streamer(
+        key="mic",
+        mode=WebRtcMode.SENDONLY,
+        audio_receiver_size=1024,
+    )
+
     submit_button = st.form_submit_button("ارسال")
 
-    if submit_button and question.strip() != "":
-        answer = restaurant_assistant(question)
+    # تبدیل صدا به متن اگر میکروفن فعال بود
+    if audio_bytes:
+        recognizer = sr.Recognizer()
+        with tempfile.NamedTemporaryFile(suffix=".wav") as temp_wav:
+            audio_bytes.audio.to_wav(temp_wav.name)
+            with sr.AudioFile(temp_wav.name) as source:
+                audio_data = recognizer.record(source)
+                try:
+                    question_text = recognizer.recognize_google(audio_data, language="fa-IR")
+                except sr.UnknownValueError:
+                    st.warning("صدای شما قابل تشخیص نبود!")
+
+    # ارسال سوال
+    if submit_button and question_text.strip() != "":
+        answer = restaurant_assistant(question_text)
         st.markdown(
             f"""
             <div style='background-color: white; color: black; padding: 15px; border-radius: 10px; font-size:15px;'>
