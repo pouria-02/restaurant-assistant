@@ -19,7 +19,7 @@ menu = {
         },
         "پیتزا پپرونی": {
             "desc": "خمیر نازک، سس گوجه‌فرنگی، پنیر موتزارلا، پپرونی",
-            "img": "Pepperoni.jpg"
+            "img": "https://raw.githubusercontent.com/pouria-02/restaurant-assistant/main/Pepperoni.jpg"
         },
         "برگر کلاسیک": {
             "desc": "گوشت گوساله، نان برگر، پنیر چدار، کاهو، گوجه، سس مخصوص",
