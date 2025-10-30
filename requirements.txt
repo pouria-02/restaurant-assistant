@@ -5,3 +5,6 @@ qrcode
 pillow
 openai
 soundfile
+streamlit-webrtc
+AudioProcessorBase
+WebRtcMode
