@@ -6,4 +6,4 @@ pillow
 openai
 soundfile
 streamlit-webrtc
-
+SpeechRecognition
