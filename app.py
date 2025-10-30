@@ -108,10 +108,7 @@ div.block-container {
 }
 .food-ingredients {
     font-size: 14px;
-    color: #222;           /* متن تیره‌تر */
-    background-color: #fefefe;  /* پس‌زمینه روشن */
-    padding: 5px 10px;
-    border-radius: 5px;
+    color: #222222;   /* متن تیره‌تر */
     line-height: 1.6;
 }
 </style>
