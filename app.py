@@ -15,7 +15,7 @@ menu = {
     "فست فود": {
         "پیتزا مارگاریتا": {
             "desc": "خمیر نازک، سس گوجه‌فرنگی، پنیر موتزارلا، ریحان تازه",
-            "img": os.path.join(BASE_DIR, "margharita.jpeg")
+            "img": "https://raw.githubusercontent.com/pouria-02/restaurant-assistant/main/margharita.jpeg"
         },
         "پیتزا پپرونی": {
             "desc": "خمیر نازک، سس گوجه‌فرنگی، پنیر موتزارلا، پپرونی",
