@@ -23,27 +23,27 @@ menu = {
         },
         "برگر کلاسیک": {
             "desc": "گوشت گوساله، نان برگر، پنیر چدار، کاهو، گوجه، سس مخصوص",
-            "img": "Pepperoni.jpg"
+            "img": "https://raw.githubusercontent.com/pouria-02/restaurant-assistant/main/classic_burger.jpeg"
         },
     },
     "صبحانه": {
         "املت سبزیجات": {
             "desc": "تخم مرغ، فلفل دلمه‌ای، گوجه، سبزیجات تازه",
-            "img": "Pepperoni.jpg"
+            "img": "https://raw.githubusercontent.com/pouria-02/restaurant-assistant/main/omellete.jpeg"
         },
         "پنکیک با عسل": {
             "desc": "آرد، شیر، تخم مرغ، عسل، کره",
-            "img": "Pepperoni.jpg"
+            "img": "https://raw.githubusercontent.com/pouria-02/restaurant-assistant/main/honey.jpg"
         },
     },
     "قهوه": {
         "کاپوچینو": {
             "desc": "اسپرسو، شیر کف دار، شکلات پودر",
-            "img": "Pepperoni.jpg"
+            "img": "https://raw.githubusercontent.com/pouria-02/restaurant-assistant/main/capp.jpg"
         },
         "لاته": {
             "desc": "اسپرسو، شیر بخار داده شده",
-            "img": "Pepperoni.jpg"
+            "img": "https://raw.githubusercontent.com/pouria-02/restaurant-assistant/main/latte.jpg"
         },
     },
     "پیش غذا": {
