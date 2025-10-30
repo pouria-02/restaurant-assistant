@@ -3,6 +3,9 @@ from langchain_google_genai import ChatGoogleGenerativeAI
 from langchain_core.messages import HumanMessage
 import os
 
+
+import os
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 # API Key
 api_key = os.environ.get("GOOGLE_API_KEY")
 
@@ -15,7 +18,7 @@ menu = {
     "فست فود": {
         "پیتزا مارگاریتا": {
             "desc": "خمیر نازک، سس گوجه‌فرنگی، پنیر موتزارلا، ریحان تازه",
-            "img": "margharita.jpeg"
+            "img": os.path.join(BASE_DIR, "margharita.jpeg")
         },
         "پیتزا پپرونی": {
             "desc": "خمیر نازک، سس گوجه‌فرنگی، پنیر موتزارلا، پپرونی",
