@@ -34,7 +34,7 @@ def restaurant_assistant(question):
     response = llm.invoke(msg)
     return response.content
 
-# --- منوی نمونه و آیکون‌ها ---
+# --- منوی نمونه و آیکون‌ها (بدون تغییر) ---
 menu = {
     "نوشیدنی گرم": {
         "موکا مخصوص": {
@@ -56,9 +56,8 @@ menu = {
     }
 }
 
-# دیکشنری آیکون‌ها (از ایموجی یا آیکون‌های SVG/URL استفاده می‌شود)
 category_icons = {
-    "نوشیدنی گرم": "☕", # یا آیکون URL: "https://raw.githubusercontent.com/pouria-02/restaurant-assistant/main/hot_drink_icon.png"
+    "نوشیدنی گرم": "☕",
     "فست فود": "🍔",
     "چای و دمنوش": "🍵",
     "میلکشیک‌ها": "🥤"
@@ -73,7 +72,8 @@ div.block-container {
     max-width: 95%;
 }
 .stApp {
-    background-color: #FFF8E7; /* رنگ کرمی ملایم */
+    /* تغییر اعمال شده: رنگ کرمی گرم‌تر */
+    background-color: #FFF4D6; 
 }
 /* بخش بالایی صفحه برای دسته‌بندی‌ها */
 .category-selection-area {
@@ -134,11 +134,9 @@ div.block-container {
 .category-icon {
     font-size: 30px; /* اندازه آیکون */
     margin-bottom: 5px;
-    /* برای کارت‌های انتخاب شده، آیکون سفید می‌شود */
     filter: invert(0); 
 }
 .category-card.selected .category-icon {
-    /* فیلتر برای سفید کردن آیکون یا استفاده از ایموجی سفید */
     filter: invert(1);
 }
 
@@ -212,29 +210,25 @@ div.block-container {
 </style>
 """, unsafe_allow_html=True)
 
-# --- منطق UI ---
+# --- منطق UI (بدون تغییر) ---
 
 st.markdown("<h1 style='text-align: right; color: #333; font-size: 24px; margin-bottom: 20px;'>🍽️ منوی کافه نمونه</h1>", unsafe_allow_html=True)
 
-# 1. نوار دسته‌بندی افقی جدید (شبیه تصویر)
+# 1. نوار دسته‌بندی افقی
 categories = list(menu.keys())
 default_category = categories[0]
 
 if 'selected_category' not in st.session_state:
     st.session_state.selected_category = default_category
 
-# --- مدیریت کلیک دسته‌بندی ---
-# از query parameters برای تغییر دسته استفاده می‌کنیم، که در Streamlit معادل کلیک دکمه است
 query_params = st.query_params
 
 if "category" in query_params:
     selected_from_url = query_params["category"]
     if selected_from_url in categories:
         st.session_state.selected_category = selected_from_url
-        # حذف پارامتر برای جلوگیری از لوپ رفرش
         del st.query_params["category"]
 
-# --- نمایش نوار دسته‌بندی ---
 st.markdown('<div class="category-selection-area">', unsafe_allow_html=True)
 st.markdown('<h3 style="text-align: right; margin: 0 15px 10px 0; font-size: 16px;">لیست دسته‌بندی‌ها ⌄</h3>', unsafe_allow_html=True)
 st.markdown('<div class="category-bar-container">', unsafe_allow_html=True)
@@ -245,8 +239,6 @@ for category in categories:
     is_selected = "selected" if category == selected_category else ""
     icon = category_icons.get(category, "❓")
     
-    # استفاده از لینک HTML برای تغییر query parameter
-    # این روش در Streamlit باعث رفرش و تغییر Session State می‌شود
     url_to_click = f"/?category={category}"
     
     st.markdown(f"""
@@ -258,7 +250,6 @@ for category in categories:
 
 st.markdown('</div>', unsafe_allow_html=True)
 st.markdown('</div>', unsafe_allow_html=True)
-# --- پایان نوار دسته‌بندی ---
 
 
 # 2. نمایش آیتم‌های منو بر اساس دسته‌بندی انتخاب شده
