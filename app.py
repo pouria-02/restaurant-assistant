@@ -3,150 +3,173 @@ from langchain_google_genai import ChatGoogleGenerativeAI
 from langchain_core.messages import HumanMessage
 import os
 
-# API Key
+# ====== Google Gemini Setup ======
 api_key = os.environ.get("GOOGLE_API_KEY")
-
-# مدل Google Gemini
 MODEL_NAME = "gemini-2.0-flash-exp"
 llm = ChatGoogleGenerativeAI(model=MODEL_NAME, api_key=api_key)
 
-# منوی نمونه با دسته‌بندی و عکس
+# ====== Sample Menu ======
 menu = {
     "فست فود": {
-        "پیتزا مارگاریتا": {
-            "desc": "خمیر نازک، سس گوجه‌فرنگی، پنیر موتزارلا، ریحان تازه",
-            "img": "https://raw.githubusercontent.com/pouria-02/restaurant-assistant/main/margharita.jpeg"
-        },
-        "پیتزا پپرونی": {
-            "desc": "خمیر نازک، سس گوجه‌فرنگی، پنیر موتزارلا، پپرونی",
-            "img": "https://raw.githubusercontent.com/pouria-02/restaurant-assistant/main/Pepperoni.jpg"
-        },
-        "برگر کلاسیک": {
-            "desc": "گوشت گوساله، نان برگر، پنیر چدار، کاهو، گوجه، سس مخصوص",
-            "img": "https://raw.githubusercontent.com/pouria-02/restaurant-assistant/main/classic_burger.jpeg"
-        },
+        "پیتزا مارگاریتا": {"desc": "خمیر نازک، سس گوجه‌فرنگی، پنیر موتزارلا، ریحان تازه"},
+        "پیتزا پپرونی": {"desc": "خمیر نازک، سس گوجه‌فرنگی، پنیر موتزارلا، پپرونی"},
+        "برگر کلاسیک": {"desc": "گوشت گوساله، نان برگر، پنیر چدار، کاهو، گوجه، سس مخصوص"},
     },
     "صبحانه": {
-        "املت سبزیجات": {
-            "desc": "تخم مرغ، فلفل دلمه‌ای، گوجه، سبزیجات تازه",
-            "img": "https://raw.githubusercontent.com/pouria-02/restaurant-assistant/main/omellete.jpg"
-        },
-        "پنکیک با عسل": {
-            "desc": "آرد، شیر، تخم مرغ، عسل، کره",
-            "img": "https://raw.githubusercontent.com/pouria-02/restaurant-assistant/main/honey.jpg"
-        },
+        "املت سبزیجات": {"desc": "تخم مرغ، فلفل دلمه‌ای، گوجه، سبزیجات تازه"},
+        "پنکیک با عسل": {"desc": "آرد، شیر، تخم مرغ، عسل، کره"},
     },
     "قهوه": {
-        "کاپوچینو": {
-            "desc": "اسپرسو، شیر کف دار، شکلات پودر",
-            "img": "https://raw.githubusercontent.com/pouria-02/restaurant-assistant/main/capp.jpg"
-        },
-        "لاته": {
-            "desc": "اسپرسو، شیر بخار داده شده",
-            "img": "https://raw.githubusercontent.com/pouria-02/restaurant-assistant/main/latte.jpg"
-        },
+        "کاپوچینو": {"desc": "اسپرسو، شیر کف دار، شکلات پودر"},
+        "لاته": {"desc": "اسپرسو، شیر بخار داده شده"},
     },
     "پیش غذا": {
-        "سالاد سزار": {
-            "desc": "کاهو رومی، مرغ گریل‌شده، پنیر پارمزان، کروتون، سس سزار",
-            "img": "Pepperoni.jpg"
-        },
-        "سالاد یونانی": {
-            "desc": "کاهو، گوجه، خیار، زیتون، پنیر فتا، روغن زیتون",
-            "img": "Pepperoni.jpg"
-        },
-    }
+        "سالاد سزار": {"desc": "کاهو رومی، مرغ گریل‌شده، پنیر پارمزان، کروتون، سس سزار"},
+        "سالاد یونانی": {"desc": "کاهو، گوجه، خیار، زیتون، پنیر فتا، روغن زیتون"},
+    },
 }
 
-# دستیار رستوران
+img_url = "https://raw.githubusercontent.com/pouria-02/restaurant-assistant/main/latte.jpg"
+
+# ====== Chatbot ======
 def restaurant_assistant(question):
     system_prompt = (
         "تو یه دستیار رستوران هستی و با لحنی صمیمی با مشتری‌ها صحبت می‌کنی. "
         "فقط درباره‌ی غذاهای منوی زیر جواب بده. "
         "اگر سوال ربطی به منو یا مواد تشکیل‌دهنده‌ی غذاها نداشت، با خوشرویی بگو: "
         "«من فقط درباره‌ی منو می‌تونم کمکت کنم :)»\n\n"
-        "اگر کاربر درباره‌ی مواد تشکیل‌دهنده‌ی هر غذا پرسید، "
-        "با لحن دوستانه درباره اون ماده توضیح بده، خواصش رو بگو و اگر قابل درست کردن در خونه هست، "
-        "به طور خلاصه روش تهیه‌ش رو هم بگو.\n\n"
         f"منو:\n{menu}"
     )
     msg = [HumanMessage(content=f"{system_prompt}\n\nسؤال مشتری: {question}")]
     response = llm.invoke(msg)
     return response.content
 
-# ===== CSS برای واکنش‌گرایی و زیبایی =====
+
+# ====== CSS ======
 st.markdown("""
 <style>
+body {
+    background-color: #f3e7cf;
+    font-family: "IRANSans", sans-serif;
+}
 div.block-container {
-    padding: 2rem 3rem;
-    max-width: 95%;
+    padding: 2rem;
+    max-width: 900px;
+}
+h1, h2, h3, h4 {
+    font-family: "IRANSans", sans-serif;
+}
+.category-bar {
+    display: flex;
+    overflow-x: auto;
+    gap: 10px;
+    padding: 10px 0;
+}
+.category-button {
+    background-color: white;
+    color: black;
+    padding: 10px 20px;
+    border-radius: 20px;
+    border: 2px solid #ddd;
+    font-weight: bold;
+    white-space: nowrap;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+.category-button:hover {
+    background-color: #ff6600;
+    color: white;
 }
 .food-card {
     display: flex;
     align-items: center;
-    margin-bottom: 15px;
+    background-color: #fff;
+    border-radius: 15px;
     padding: 10px;
-    border-bottom: 1px solid #ddd;
-    border-radius: 8px;
+    margin-bottom: 15px;
+    box-shadow: 0 3px 8px rgba(0,0,0,0.1);
 }
 .food-img {
-    width: 100px;
-    height: 100px;
+    width: 90px;
+    height: 90px;
     border-radius: 10px;
-    margin-right: 15px;
+    margin-left: 15px;
     object-fit: cover;
-    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
 }
 .food-info {
-    flex-grow: 1;
+    flex: 1;
 }
 .food-name {
-    color: #ff6600;
-    font-size: 18px;
+    font-weight: bold;
+    font-size: 16px;
+}
+.food-desc {
+    color: #666;
+    font-size: 14px;
+    margin-bottom: 6px;
+}
+.food-price {
+    color: #00aa55;
     font-weight: bold;
 }
-.food-ingredients {
-    font-size: 14px;
+.select-btn {
+    background-color: #fff;
+    border: 1px solid #00aa55;
+    color: #00aa55;
+    border-radius: 8px;
+    padding: 4px 10px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+.select-btn:hover {
+    background-color: #00aa55;
     color: white;
 }
 </style>
 """, unsafe_allow_html=True)
 
-# ===== UI =====
-st.markdown("<h1 style='text-align: center; color: #ff6600;'>🍽️ منوی رستوران نمونه</h1>", unsafe_allow_html=True)
 
-# Tabs برای دسته‌ها
-tabs = st.tabs(list(menu.keys()))
+# ====== UI ======
+st.markdown("<h1 style='text-align:center;color:#ff6600;'>🍽️ منوی رستوران</h1>", unsafe_allow_html=True)
 
-for i, category in enumerate(menu.keys()):
-    with tabs[i]:
-        st.subheader(f"📋 {category}")
-        for dish, info in menu[category].items():
-            st.markdown(f"""
-            <div class='food-card'>
-                <img src='{info["img"]}' class='food-img'>
-                <div class='food-info'>
-                    <div class='food-name'>{dish}</div>
-                    <div class='food-ingredients'>{info["desc"]}</div>
+# Category bar
+selected_category = st.selectbox("📋 لیست دسته‌بندی‌ها:", ["همه"] + list(menu.keys()))
+
+# Horizontal category buttons
+st.markdown("<div class='category-bar'>", unsafe_allow_html=True)
+for cat in menu.keys():
+    if st.button(cat):
+        selected_category = cat
+st.markdown("</div>", unsafe_allow_html=True)
+
+# Menu display
+categories = list(menu.keys()) if selected_category == "همه" else [selected_category]
+for cat in categories:
+    st.markdown(f"<h3 style='color:#ff6600;margin-top:20px;'>🍴 {cat}</h3>", unsafe_allow_html=True)
+    for dish, info in menu[cat].items():
+        st.markdown(f"""
+        <div class='food-card'>
+            <img src='{img_url}' class='food-img'>
+            <div class='food-info'>
+                <div class='food-name'>{dish}</div>
+                <div class='food-desc'>{info["desc"]}</div>
+                <div style='display:flex;justify-content:space-between;align-items:center;'>
+                    <span class='food-price'>۱۹۸,۸۰۰ تومان</span>
+                    <button class='select-btn'>انتخاب</button>
                 </div>
             </div>
-            """, unsafe_allow_html=True)
+        </div>
+        """, unsafe_allow_html=True)
 
-# سوال و جواب AI با فرم و دکمه ارسال
+# Chatbot input
 st.markdown("---")
-st.subheader("💬 بپرس از دستیار رستوران!")
+st.subheader("💬 گفت‌وگو با دستیار منو")
 
-with st.form("chat_form"):
-    question = st.text_input("سوال خود را بنویس یا بپرس:")
-    submit_button = st.form_submit_button("ارسال")
-
-    if submit_button and question.strip() != "":
+question = st.text_input("سؤال خود را بنویس:")
+if st.button("ارسال"):
+    if question.strip():
         answer = restaurant_assistant(question)
         st.markdown(
-            f"""
-            <div style='background-color: white; color: black; padding: 15px; border-radius: 10px; font-size:15px;'>
-                <strong>🍳 پاسخ دستیار:</strong><br>{answer}
-            </div>
-            """,
+            f"<div style='background-color:#fff;padding:15px;border-radius:10px;'>{answer}</div>",
             unsafe_allow_html=True
         )
