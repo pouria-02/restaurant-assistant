@@ -18,9 +18,7 @@ except Exception:
     llm = MockLLM()
     
 def restaurant_assistant(question):
-    # --- منوی ثابت برای سیستم پرامپت ---
-    # از آنجایی که menu از scope بیرونی استفاده می‌شود، برای حفظ منطق کد شما،
-    # این بخش به صورت خلاصه در اینجا آورده می‌شود.
+    # ... ( restaurant_assistant function remains unchanged ) ...
     menu_for_prompt = {
         "نوشیدنی گرم": {"موکا مخصوص": {}, "کاپوچینو": {}},
         "فست فود": {"پیتزا مارگاریتا": {}},
@@ -112,21 +110,13 @@ h3 {
 
 
 /* 🟢 استایل دهی دکمه ارسال فرم (submit button) 🟢 */
-/* هدف قرار دادن دکمه ارسال داخل فرم */
 .stFormSubmitButton > button {
-    /* پس زمینه سبز همرنگ قیمت‌ها */
     background-color: #2ECC71 !important; 
-    /* متن سفید */
     color: white !important; 
-    /* حذف بوردر اضافی Streamlit */
     border: none !important; 
-    /* گرد کردن بیشتر لبه‌ها */
     border-radius: 20px !important; 
-    /* کمی پدینگ برای بزرگ‌تر شدن */
     padding: 8px 20px !important; 
-    /* ضخامت فونت */
     font-weight: bold !important;
-    /* اعمال سایه کوچک برای زیبایی */
     box-shadow: 0 4px 6px rgba(46, 204, 113, 0.4) !important;
 }
 
@@ -136,16 +126,18 @@ h3 {
 }
 
 
-/* بخش بالایی صفحه برای دسته‌بندی‌ها (بدون تغییر) */
+/* 🟢 استایل بخش بالایی صفحه برای دسته‌بندی‌ها (بخش مهم برای نمایش افقی) 🟢 */
 .category-selection-area {
     background-color: white; 
     padding: 10px 0;
     margin-bottom: 20px;
     border-radius: 20px;
     box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+    /* اطمینان از نمایش افقی در مرورگرهای موبایل */
+    width: 100%; 
 }
 
-/* نوار دسته‌بندی افقی */
+/* نوار دسته‌بندی افقی - این کلاس برای نمایش افقی و اسکرول در موبایل حیاتی است */
 .category-bar-container {
     overflow-x: scroll; 
     white-space: nowrap; 
@@ -153,8 +145,8 @@ h3 {
     direction: rtl; 
     scrollbar-width: none; 
     -ms-overflow-style: none;
-    display: flex; 
-    flex-direction: row; 
+    display: flex; /* کلید نمایش افقی */
+    flex-direction: row; /* کلید نمایش افقی */
 }
 .category-bar-container::-webkit-scrollbar { 
     display: none; 
@@ -257,7 +249,6 @@ h3 {
 .food-item-price {
     color: #2ECC71; 
     font-size: 16px;
-    /* حفظ تغییر قبلی: افزایش ضخامت فونت به 900 (Ultra Bold) */
     font-weight: 900; 
     direction: rtl;
 }
@@ -275,7 +266,7 @@ h3 {
 </style>
 """, unsafe_allow_html=True)
 
-# --- منطق UI (بدون تغییر) ---
+# --- منطق UI ---
 
 st.markdown("<h1 style='text-align: right; color: #333; font-size: 24px; margin-bottom: 20px;'>🍽️ منوی کافه نمونه</h1>", unsafe_allow_html=True)
 
@@ -294,6 +285,7 @@ if "category" in query_params:
         st.session_state.selected_category = selected_from_url
         del st.query_params["category"]
 
+# 📌 این بخش اکنون اطمینان می‌دهد که دسته‌بندی‌ها به‌صورت افقی و در بدنه اصلی نمایش داده می‌شوند.
 st.markdown('<div class="category-selection-area">', unsafe_allow_html=True)
 st.markdown('<h3 style="text-align: right; margin: 0 15px 10px 0; font-size: 16px;">لیست دسته‌بندی‌ها ⌄</h3>', unsafe_allow_html=True)
 st.markdown('<div class="category-bar-container">', unsafe_allow_html=True)
@@ -306,6 +298,7 @@ for category in categories:
     
     url_to_click = f"/?category={category}"
     
+    # 📝 نکته: این کارت‌ها به دلیل CSS کلاس‌های .category-bar-container و .category-card که display: flex; دارند، افقی نمایش داده می‌شوند.
     st.markdown(f"""
     <a href="{url_to_click}" target="_self" class='category-card {is_selected}'>
         <div class='category-icon'>{icon}</div>
@@ -317,7 +310,7 @@ st.markdown('</div>', unsafe_allow_html=True)
 st.markdown('</div>', unsafe_allow_html=True)
 
 
-# 2. نمایش آیتم‌های منو بر اساس دسته‌بندی انتخاب شده
+# 2. نمایش آیتم‌های منو بر اساس دسته‌بندی انتخاب شده (بدون تغییر)
 st.markdown(f"<h2 style='text-align: right; color: #333; font-size: 20px; margin-top: 20px; margin-bottom: 20px;'>{selected_category}</h2>", unsafe_allow_html=True)
 
 if selected_category in menu:
@@ -347,12 +340,14 @@ if selected_category in menu:
             </div>
             """, unsafe_allow_html=True)
 
-# --- دستیار رستوران ---
+# --- دستیار رستوران (بدون تغییر) ---
 st.markdown("---")
 st.subheader("💬 بپرس از دستیار رستوران!")
 
 with st.form("chat_form"):
+    # باکس ورودی کرمی با بوردر سبز (تغییرات قبلی)
     question = st.text_input("سوال خود را بنویس یا بپرس:")
+    # دکمه ارسال سبز با متن سفید (تغییرات قبلی)
     submit_button = st.form_submit_button("ارسال")
 
     if submit_button and question.strip() != "":
