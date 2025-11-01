@@ -124,10 +124,10 @@ h3 {
 
 /* نوار دسته‌بندی افقی */
 .category-bar-container {
-    overflow-x: scroll; 
-    white-space: nowrap; 
+    overflow-x: scroll; /* اسکرول افقی */
+    white-space: nowrap; /* از شکستن خط جلوگیری می‌کند */
     padding: 0 10px 5px 10px;
-    direction: rtl; 
+    direction: rtl; /* برای نمایش از راست به چپ */
     scrollbar-width: none; 
     -ms-overflow-style: none;
     display: flex; 
@@ -140,7 +140,7 @@ h3 {
 /* استایل کارت‌های دسته‌بندی شبیه تصویر */
 .category-card {
     display: flex; 
-    flex-shrink: 0; 
+    flex-shrink: 0; /* جلوگیری از کوچک شدن کارت‌ها */
     flex-direction: column;
     align-items: center;
     justify-content: center;
