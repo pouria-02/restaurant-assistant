@@ -19,11 +19,12 @@ except Exception:
     
 def restaurant_assistant(question):
     # ... ( restaurant_assistant function remains unchanged ) ...
+    # منو برای پرامپت دستیار باید به‌روزرسانی شود تا آیتم‌های جدید را منعکس کند
     menu_for_prompt = {
-        "نوشیدنی گرم": {"موکا مخصوص": {}, "کاپوچینو": {}},
-        "فست فود": {"پیتزا مارگاریتا": {}},
-        "چای و دمنوش": {"چای سبز": {}},
-        "میلکشیک‌ها": {"شکلات": {}}
+        "نوشیدنی گرم": {"موکا مخصوص": {}, "کاپوچینو": {}, "لاته وانیلی": {}, "قهوه دمی": {}, "هات چاکلت": {}, "اسپرسو سینگل": {}, "قهوه ترک": {}},
+        "فست فود": {"پیتزا مارگاریتا": {}, "برگر کلاسیک": {}, "ساندویچ ژامبون": {}, "سیب زمینی سرخ کرده": {}, "پیتزا پپرونی": {}, "سالاد سزار": {}, "لازانیا": {}},
+        "چای و دمنوش": {"چای سبز": {}, "چای سیاه ارل گری": {}, "دمنوش بابونه": {}, "دمنوش زنجبیل": {}, "چای مراکشی": {}, "دمنوش میوه‌ای": {}, "چای ماسالا": {}},
+        "میلکشیک‌ها": {"شکلات": {}, "توت فرنگی": {}, "وانیل": {}, "کارامل نمکی": {}, "قهوه": {}, "موز": {}, "نارگیل": {}}
     }
     
     system_prompt = (
@@ -40,7 +41,7 @@ def restaurant_assistant(question):
     response = llm.invoke(msg)
     return response.content
 
-# --- منوی نمونه و آیکون‌ها (بدون تغییر) ---
+# --- منوی نمونه و آیکون‌ها (با آیتم‌های جدید) ---
 menu = {
     "نوشیدنی گرم": {
         "موکا مخصوص": {
@@ -50,15 +51,48 @@ menu = {
         "کاپوچینو": {
             "size_mid": {"desc": "اسپرسو، شیر کف دار، شکلات پودر", "price": "۱۶۵,۰۰۰", "img": "https://raw.githubusercontent.com/pouria-02/restaurant-assistant/main/capp.jpg"},
         },
+        "لاته وانیلی": {
+            "size_mid": {"desc": "اسپرسو، شیر داغ و عصاره وانیل", "price": "۱۸۰,۰۰۰", "img": "https://raw.githubusercontent.com/pouria-02/restaurant-assistant/main/capp.jpg"},
+        },
+        "قهوه دمی": {
+            "size_mid": {"desc": "قهوه تک‌خاستگاه با روش دم‌آوری انتخابی", "price": "۱۵۵,۰۰۰", "img": "https://raw.githubusercontent.com/pouria-02/restaurant-assistant/main/capp.jpg"},
+        },
+        "هات چاکلت": {
+            "size_mid": {"desc": "ترکیب ویژه شکلات و شیر گرم", "price": "۱۷۰,۰۰۰", "img": "https://raw.githubusercontent.com/pouria-02/restaurant-assistant/main/capp.jpg"},
+        },
+        "اسپرسو سینگل": {
+            "size_mid": {"desc": "یک شات اسپرسوی غلیظ و تازه", "price": "۱۱۰,۰۰۰", "img": "https://raw.githubusercontent.com/pouria-02/restaurant-assistant/main/capp.jpg"},
+        },
+        "قهوه ترک": {
+            "size_mid": {"desc": "قهوه سنتی ترک با پخت روی ماسه", "price": "۱۲۰,۰۰۰", "img": "https://raw.githubusercontent.com/pouria-02/restaurant-assistant/main/capp.jpg"},
+        },
     },
     "فست فود": {
         "پیتزا مارگاریتا": {"mid": {"desc": "خمیر نازک، سس گوجه‌فرنگی، پنیر موتزارلا، ریحان تازه", "price": "۲۵۰,۰۰۰", "img": "https://raw.githubusercontent.com/pouria-02/restaurant-assistant/main/margharita.jpeg"}},
+        "برگر کلاسیک": {"mid": {"desc": "گوشت ۱۲۰ گرمی، کاهو، گوجه، سس مخصوص", "price": "۲۱۰,۰۰۰", "img": "https://raw.githubusercontent.com/pouria-02/restaurant-assistant/main/Pepperoni.jpg"}},
+        "ساندویچ ژامبون": {"mid": {"desc": "ژامبون گوشت و مرغ، پنیر، کاهو", "price": "۱۸۰,۰۰۰", "img": "https://raw.githubusercontent.com/pouria-02/restaurant-assistant/main/omellete.jpg"}},
+        "سیب زمینی سرخ کرده": {"mid": {"desc": "سیب زمینی بلژیکی با سس سیر", "price": "۹۰,۰۰۰", "img": "https://raw.githubusercontent.com/pouria-02/restaurant-assistant/main/margharita.jpeg"}},
+        "پیتزا پپرونی": {"mid": {"desc": "پپرونی، پنیر موتزارلا، سس تند", "price": "۲۷۰,۰۰۰", "img": "https://raw.githubusercontent.com/pouria-02/restaurant-assistant/main/Pepperoni.jpg"}},
+        "سالاد سزار": {"mid": {"desc": "کاهو، مرغ گریل، سس سزار، کروتان", "price": "۱۷۵,۰۰۰", "img": "https://raw.githubusercontent.com/pouria-02/restaurant-assistant/main/omellete.jpg"}},
+        "لازانیا": {"mid": {"desc": "لایه‌های خمیر، گوشت، پنیر، سس بشامل", "price": "۲۳۰,۰۰۰", "img": "https://raw.githubusercontent.com/pouria-02/restaurant-assistant/main/margharita.jpeg"}},
     },
     "چای و دمنوش": {
         "چای سبز": {"mid": {"desc": "چای سبز با عطر ملایم", "price": "۷۰,۰۰۰", "img": "https://raw.githubusercontent.com/pouria-02/restaurant-assistant/main/omellete.jpg"}},
+        "چای سیاه ارل گری": {"mid": {"desc": "چای سیاه با اسانس برگاموت", "price": "۷۵,۰۰۰", "img": "https://raw.githubusercontent.com/pouria-02/restaurant-assistant/main/omellete.jpg"}},
+        "دمنوش بابونه": {"mid": {"desc": "آرامش‌بخش و تسکین‌دهنده اعصاب", "price": "۸۰,۰۰۰", "img": "https://raw.githubusercontent.com/pouria-02/restaurant-assistant/main/omellete.jpg"}},
+        "دمنوش زنجبیل": {"mid": {"desc": "گرم‌کننده و تقویت‌کننده سیستم ایمنی", "price": "۸۵,۰۰۰", "img": "https://raw.githubusercontent.com/pouria-02/restaurant-assistant/main/omellete.jpg"}},
+        "چای مراکشی": {"mid": {"desc": "ترکیب چای سبز، نعنا و شکر (به انتخاب شما)", "price": "۹۵,۰۰۰", "img": "https://raw.githubusercontent.com/pouria-02/restaurant-assistant/main/omellete.jpg"}},
+        "دمنوش میوه‌ای": {"mid": {"desc": "ترکیبی از میوه‌های خشک و طبیعی", "price": "۸۵,۰۰۰", "img": "https://raw.githubusercontent.com/pouria-02/restaurant-assistant/main/omellete.jpg"}},
+        "چای ماسالا": {"mid": {"desc": "چای سیاه با ادویه‌های گرم و شیر", "price": "۱۲۰,۰۰۰", "img": "https://raw.githubusercontent.com/pouria-02/restaurant-assistant/main/omellete.jpg"}},
     },
     "میلکشیک‌ها": {
-        "شکلات": {"mid": {"desc": "میلکشیک شکلاتی", "price": "۱۵۰,۰۰۰", "img": "https://raw.githubusercontent.com/pouria-02/restaurant-assistant/main/Pepperoni.jpg"}},
+        "شکلات": {"mid": {"desc": "میلکشیک شکلاتی با تکه‌های شکلات", "price": "۱۵۰,۰۰۰", "img": "https://raw.githubusercontent.com/pouria-02/restaurant-assistant/main/Pepperoni.jpg"}},
+        "توت فرنگی": {"mid": {"desc": "ترکیب شیر، بستنی و توت فرنگی تازه", "price": "۱۶۰,۰۰۰", "img": "https://raw.githubusercontent.com/pouria-02/restaurant-assistant/main/Pepperoni.jpg"}},
+        "وانیل": {"mid": {"desc": "میلکشیک کلاسیک وانیلی", "price": "۱۴۵,۰۰۰", "img": "https://raw.githubusercontent.com/pouria-02/restaurant-assistant/main/Pepperoni.jpg"}},
+        "کارامل نمکی": {"mid": {"desc": "بستنی، شیر و سس کارامل نمکی خانگی", "price": "۱۷۰,۰۰۰", "img": "https://raw.githubusercontent.com/pouria-02/restaurant-assistant/main/Pepperoni.jpg"}},
+        "قهوه": {"mid": {"desc": "ترکیب اسپرسو، شیر و بستنی وانیلی", "price": "۱۶۵,۰۰۰", "img": "https://raw.githubusercontent.com/pouria-02/restaurant-assistant/main/Pepperoni.jpg"}},
+        "موز": {"mid": {"desc": "ترکیب موز تازه، شیر و بستنی", "price": "۱۵۵,۰۰۰", "img": "https://raw.githubusercontent.com/pouria-02/restaurant-assistant/main/Pepperoni.jpg"}},
+        "نارگیل": {"mid": {"desc": "میلکشیک با شیر نارگیل و تکه‌های نارگیل", "price": "۱۷۵,۰۰۰", "img": "https://raw.githubusercontent.com/pouria-02/restaurant-assistant/main/Pepperoni.jpg"}},
     }
 }
 
@@ -69,7 +103,7 @@ category_icons = {
     "میلکشیک‌ها": "🥤"
 }
 
-# --- CSS برای استایل جدید ---
+# --- CSS برای استایل جدید (بدون تغییر در اینجا) ---
 st.markdown("""
 <style>
 /* فونت و پس زمینه */
@@ -223,7 +257,7 @@ h3 {
 }
 
 .food-item-name {
-    /* 🔴 تغییر اعمال شده: خاکستری شدن نام غذا 🔴 */
+    /* خاکستری شدن نام غذا (درخواستی قبلی) */
     color: #555555; 
     font-size: 16px;
     font-weight: bold;
@@ -236,7 +270,7 @@ h3 {
     margin-bottom: 5px;
 }
 .food-item-desc {
-    /* 🔴 تغییر اعمال شده: خاکستری شدن توضیحات 🔴 */
+    /* خاکستری شدن توضیحات (درخواستی قبلی) */
     font-size: 13px;
     color: #777777; 
     margin-bottom: 8px;
@@ -268,7 +302,7 @@ h3 {
 </style>
 """, unsafe_allow_html=True)
 
-# --- منطق UI ---
+# --- منطق UI (بدون تغییر) ---
 
 st.markdown("<h1 style='text-align: right; color: #333; font-size: 24px; margin-bottom: 20px;'>🍽️ منوی کافه نمونه</h1>", unsafe_allow_html=True)
 
@@ -312,7 +346,7 @@ st.markdown('</div>', unsafe_allow_html=True)
 st.markdown('</div>', unsafe_allow_html=True)
 
 
-# 2. نمایش آیتم‌های منو بر اساس دسته‌بندی انتخاب شده (بدون تغییر)
+# 2. نمایش آیتم‌های منو بر اساس دسته‌بندی انتخاب شده 
 st.markdown(f"<h2 style='text-align: right; color: #333; font-size: 20px; margin-top: 20px; margin-bottom: 20px;'>{selected_category}</h2>", unsafe_allow_html=True)
 
 if selected_category in menu:
