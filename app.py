@@ -18,7 +18,23 @@ except Exception:
     llm = MockLLM()
     
 def restaurant_assistant(question):
-    # ... (کد تابع restaurant_assistant بدون تغییر) ...
+    # --- منوی ثابت برای سیستم پرامپت ---
+    menu = {
+        "نوشیدنی گرم": {
+            "موکا مخصوص": {"desc": "ترکیب دوشات اسپرسو، شکلات داغ و خامه"},
+            "کاپوچینو": {"desc": "اسپرسو، شیر کف دار، شکلات پودر"},
+        },
+        "فست فود": {
+            "پیتزا مارگاریتا": {"desc": "خمیر نازک، سس گوجه‌فرنگی، پنیر موتزارلا، ریحان تازه"},
+        },
+        "چای و دمنوش": {
+            "چای سبز": {"desc": "چای سبز با عطر ملایم"},
+        },
+        "میلکشیک‌ها": {
+            "شکلات": {"desc": "میلکشیک شکلاتی"},
+        }
+    }
+    
     system_prompt = (
         "تو یه دستیار رستوران هستی و با لحنی صمیمی با مشتری‌ها صحبت می‌کنی. "
         "فقط درباره‌ی غذاهای منوی زیر جواب بده. "
@@ -70,9 +86,16 @@ div.block-container {
     padding: 2rem 1rem;
     max-width: 95%;
 }
+/* 1. پس‌زمینه کرمی گرم‌تر */
 .stApp {
-    background-color: #FFF4D6; /* رنگ کرمی گرم‌تر */
+    background-color: #FFF4D6; 
 }
+
+/* 4. رنگ مشکی برای عنوان دستیار رستوران (st.subheader) */
+h3 {
+    color: #000000 !important;
+}
+
 /* بخش بالایی صفحه برای دسته‌بندی‌ها */
 .category-selection-area {
     background-color: white; 
@@ -82,12 +105,12 @@ div.block-container {
     box-shadow: 0 2px 5px rgba(0,0,0,0.05);
 }
 
-/* نوار دسته‌بندی افقی */
+/* 2. نوار دسته‌بندی افقی */
 .category-bar-container {
-    overflow-x: scroll; /* اسکرول افقی */
-    white-space: nowrap; /* از شکستن خط جلوگیری می‌کند */
+    overflow-x: scroll; 
+    white-space: nowrap; 
     padding: 0 10px 5px 10px;
-    direction: rtl; /* برای نمایش از راست به چپ */
+    direction: rtl; 
     scrollbar-width: none; 
     -ms-overflow-style: none;
     display: flex; 
@@ -100,7 +123,7 @@ div.block-container {
 /* استایل کارت‌های دسته‌بندی شبیه تصویر */
 .category-card {
     display: flex; 
-    flex-shrink: 0; /* جلوگیری از کوچک شدن کارت‌ها */
+    flex-shrink: 0; 
     flex-direction: column;
     align-items: center;
     justify-content: center;
@@ -120,27 +143,12 @@ div.block-container {
     padding-top: 10px;
 }
 
-.category-card:hover {
-    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-}
-
-/* استایل کارت فعال/انتخاب شده (رنگ سبز شاداب) */
 .category-card.selected {
     background-color: #2ECC71; 
     color: white;
     border-color: #2ECC71;
     box-shadow: 0 4px 8px rgba(46, 204, 113, 0.5);
 }
-
-.category-icon {
-    font-size: 30px; 
-    margin-bottom: 5px;
-    filter: invert(0); 
-}
-.category-card.selected .category-icon {
-    filter: invert(1);
-}
-
 
 /* استایل آیتم منو (بدون تغییر) */
 .food-card-container {
@@ -154,49 +162,26 @@ div.block-container {
     gap: 15px;
 }
 
-.food-img-card {
-    width: 90px;
-    height: 90px;
-    border-radius: 10px;
-    object-fit: cover;
-}
-
-.food-info-card {
-    flex-grow: 1;
-    display: flex;
-    flex-direction: column;
-}
-
-.food-item-name {
-    color: #333;
-    font-size: 16px;
-    font-weight: bold;
-    margin-bottom: 5px;
-}
-.food-item-size {
-    font-size: 14px;
-    color: #333;
-    font-weight: bold;
-    margin-bottom: 5px;
-}
-.food-item-desc {
-    font-size: 13px;
-    color: #777;
-    margin-bottom: 8px;
-}
-
 .price-row {
     display: flex;
     justify-content: space-between;
     align-items: center;
 }
 
+/* 3. قیمت‌های بسیار برجسته (Ultra Bold) */
 .food-item-price {
     color: #2ECC71; 
     font-size: 16px;
-    /* تغییر اعمال شده: افزایش ضخامت فونت به 900 (Ultra Bold) */
     font-weight: 900; 
     direction: rtl;
+}
+
+/* 4. رنگ مشکی برای متن داخل input Streamlit و Label */
+.stTextInput > div > div > input {
+    color: #000000 !important;
+}
+.stTextInput > label {
+    color: #000000 !important;
 }
 
 .order-button {
@@ -284,7 +269,7 @@ if selected_category in menu:
             </div>
             """, unsafe_allow_html=True)
 
-# --- دستیار رستوران (بدون تغییر) ---
+# --- دستیار رستوران (با عنوان مشکی) ---
 st.markdown("---")
 st.subheader("💬 بپرس از دستیار رستوران!")
 
