@@ -12,6 +12,7 @@ MODEL_NAME = "gemini-2.0-flash-exp"
 try:
     llm = ChatGoogleGenerativeAI(model=MODEL_NAME, api_key=api_key)
 except Exception:
+    # Mock LLM for local testing without API Key
     class MockLLM:
         def invoke(self, msg):
             return type('Response', (object,), {'content': 'من فقط درباره‌ی منو می‌تونم کمکت کنم :)'})()
@@ -85,12 +86,14 @@ div.block-container {
 /* نوار دسته‌بندی افقی */
 .category-bar-container {
     overflow-x: scroll; /* اسکرول افقی */
-    white-space: nowrap;
+    white-space: nowrap; /* از شکستن خط جلوگیری می‌کند */
     padding: 0 10px 5px 10px;
     direction: rtl; /* برای نمایش از راست به چپ */
     scrollbar-width: none; 
     -ms-overflow-style: none;
-    display: flex; /* تضمین نمایش افقی */
+    /* تنظیمات فلکس برای تضمین نمایش افقی */
+    display: flex; 
+    flex-direction: row; 
 }
 .category-bar-container::-webkit-scrollbar { 
     display: none; 
@@ -98,8 +101,7 @@ div.block-container {
 
 /* استایل کارت‌های دسته‌بندی شبیه تصویر */
 .category-card {
-    /* تغییر مهم: inline-flex برای نمایش کنار هم */
-    display: inline-flex; 
+    display: flex; /* تغییر از inline-flex به flex برای کنترل بهتر */
     flex-shrink: 0; /* جلوگیری از کوچک شدن کارت‌ها */
     flex-direction: column;
     align-items: center;
@@ -236,6 +238,7 @@ st.markdown('<div class="category-bar-container">', unsafe_allow_html=True)
 
 selected_category = st.session_state.selected_category
 
+# نکته: ما از تگ‌های <a> در یک loop و داخل یک div با display: flex استفاده می‌کنیم
 for category in categories:
     is_selected = "selected" if category == selected_category else ""
     icon = category_icons.get(category, "❓")
