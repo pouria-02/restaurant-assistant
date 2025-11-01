@@ -71,9 +71,15 @@ div.block-container {
     max-width: 95%;
 }
 .stApp {
-    background-color: #FFF4D6; /* رنگ کرمی گرم‌تر */
+    background-color: #FFF4D6; 
 }
-/* بخش بالایی صفحه برای دسته‌بندی‌ها */
+
+/* رنگ مشکی برای عنوان دستیار رستوران (st.subheader) */
+h3 {
+    color: #000000 !important;
+}
+
+/* نوار دسته‌بندی افقی (بدون تغییر) */
 .category-selection-area {
     background-color: white; 
     padding: 10px 0;
@@ -82,12 +88,11 @@ div.block-container {
     box-shadow: 0 2px 5px rgba(0,0,0,0.05);
 }
 
-/* نوار دسته‌بندی افقی */
 .category-bar-container {
-    overflow-x: scroll; /* اسکرول افقی */
-    white-space: nowrap; /* از شکستن خط جلوگیری می‌کند */
+    overflow-x: scroll; 
+    white-space: nowrap; 
     padding: 0 10px 5px 10px;
-    direction: rtl; /* برای نمایش از راست به چپ */
+    direction: rtl; 
     scrollbar-width: none; 
     -ms-overflow-style: none;
     display: flex; 
@@ -97,10 +102,9 @@ div.block-container {
     display: none; 
 }
 
-/* استایل کارت‌های دسته‌بندی شبیه تصویر */
 .category-card {
     display: flex; 
-    flex-shrink: 0; /* جلوگیری از کوچک شدن کارت‌ها */
+    flex-shrink: 0; 
     flex-direction: column;
     align-items: center;
     justify-content: center;
@@ -120,27 +124,12 @@ div.block-container {
     padding-top: 10px;
 }
 
-.category-card:hover {
-    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-}
-
-/* استایل کارت فعال/انتخاب شده (رنگ سبز شاداب) */
 .category-card.selected {
     background-color: #2ECC71; 
     color: white;
     border-color: #2ECC71;
     box-shadow: 0 4px 8px rgba(46, 204, 113, 0.5);
 }
-
-.category-icon {
-    font-size: 30px; 
-    margin-bottom: 5px;
-    filter: invert(0); 
-}
-.category-card.selected .category-icon {
-    filter: invert(1);
-}
-
 
 /* استایل آیتم منو (بدون تغییر) */
 .food-card-container {
@@ -154,47 +143,9 @@ div.block-container {
     gap: 15px;
 }
 
-.food-img-card {
-    width: 90px;
-    height: 90px;
-    border-radius: 10px;
-    object-fit: cover;
-}
-
-.food-info-card {
-    flex-grow: 1;
-    display: flex;
-    flex-direction: column;
-}
-
-.food-item-name {
-    color: #333;
-    font-size: 16px;
-    font-weight: bold;
-    margin-bottom: 5px;
-}
-.food-item-size {
-    font-size: 14px;
-    color: #333;
-    font-weight: bold;
-    margin-bottom: 5px;
-}
-.food-item-desc {
-    font-size: 13px;
-    color: #777;
-    margin-bottom: 8px;
-}
-
-.price-row {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-
 .food-item-price {
     color: #2ECC71; 
     font-size: 16px;
-    /* تغییر اعمال شده: افزایش ضخامت فونت به 900 (Ultra Bold) */
     font-weight: 900; 
     direction: rtl;
 }
@@ -209,14 +160,26 @@ div.block-container {
     text-align: center;
     cursor: pointer;
 }
+
+/* رنگ مشکی برای متن داخل input Streamlit */
+/* این کلاس ممکن است بسته به نسخه Streamlit کمی متفاوت باشد، اما این رایج‌ترین است */
+.stTextInput > div > div > input {
+    color: #000000 !important;
+}
+
+/* رنگ مشکی برای label/placeholder input Streamlit */
+/* (بخش "سوال خود را بنویس یا بپرس:") */
+.stTextInput > label {
+    color: #000000 !important;
+}
 </style>
 """, unsafe_allow_html=True)
 
-# --- منطق UI (بدون تغییر) ---
+# --- منطق UI ---
 
 st.markdown("<h1 style='text-align: right; color: #333; font-size: 24px; margin-bottom: 20px;'>🍽️ منوی کافه نمونه</h1>", unsafe_allow_html=True)
 
-# 1. نوار دسته‌بندی افقی
+# 1. نوار دسته‌بندی افقی (بدون تغییر)
 categories = list(menu.keys())
 default_category = categories[0]
 
@@ -254,7 +217,7 @@ st.markdown('</div>', unsafe_allow_html=True)
 st.markdown('</div>', unsafe_allow_html=True)
 
 
-# 2. نمایش آیتم‌های منو بر اساس دسته‌بندی انتخاب شده
+# 2. نمایش آیتم‌های منو (بدون تغییر)
 st.markdown(f"<h2 style='text-align: right; color: #333; font-size: 20px; margin-top: 20px; margin-bottom: 20px;'>{selected_category}</h2>", unsafe_allow_html=True)
 
 if selected_category in menu:
@@ -284,11 +247,13 @@ if selected_category in menu:
             </div>
             """, unsafe_allow_html=True)
 
-# --- دستیار رستوران (بدون تغییر) ---
+# --- دستیار رستوران (با عنوان مشکی) ---
 st.markdown("---")
-st.subheader("💬 بپرس از دستیار رستوران!")
+# توجه: عنوان زیرهدر به دلیل اضافه کردن 'h3 { color: #000000 !important; }' در CSS مشکی می‌شود.
+st.subheader("💬 بپرس از دستیار رستوران!") 
 
 with st.form("chat_form"):
+    # متن ورودی به دلیل کلاس‌های CSS .stTextInput > label و .stTextInput > div > div > input مشکی می‌شود.
     question = st.text_input("سوال خود را بنویس یا بپرس:")
     submit_button = st.form_submit_button("ارسال")
 
