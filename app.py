@@ -69,8 +69,7 @@ div.block-container {
     max-width: 95%;
 }
 .stApp {
-    /* تغییر اعمال شده: رنگ کرمی ملایم */
-    background-color: #FFF8E7; 
+    background-color: #FFF8E7; /* رنگ کرمی ملایم */
 }
 
 /* نوار دسته‌بندی افقی */
@@ -152,7 +151,8 @@ div.block-container {
 }
 
 .food-item-price {
-    color: #FF6600; /* رنگ نارنجی برای قیمت */
+    /* تغییر اعمال شده: رنگ سبز برای قیمت */
+    color: #2ECC71; 
     font-size: 16px;
     font-weight: bold;
     direction: rtl;
@@ -176,7 +176,7 @@ div.block-container {
 </style>
 """, unsafe_allow_html=True)
 
-# --- منطق UI ---
+# --- منطق UI (بدون تغییر) ---
 
 st.markdown("<h1 style='text-align: right; color: #333; font-size: 24px; margin-bottom: 20px;'>🍽️ منوی کافه نمونه</h1>", unsafe_allow_html=True)
 
@@ -195,9 +195,6 @@ cols = st.columns(len(categories))
 for i, category in enumerate(categories):
     # از st.button داخل یک ستون استفاده می‌کنیم
     with cols[i]:
-        # is_selected = "selected" if category == st.session_state.selected_category else ""
-        
-        # استفاده از HTML برای دکمه و اجرای یک تابع callback برای تغییر حالت
         if st.button(category, key=f"cat_btn_{category}", help=f"نمایش دسته {category}"):
             st.session_state.selected_category = category
             st.rerun() # برای رفرش کردن صفحه و نمایش منوی جدید
