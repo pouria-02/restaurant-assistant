@@ -197,7 +197,7 @@ h3 {
 }
 
 
-/* استایل آیتم منو (بدون تغییر) */
+/* استایل آیتم منو */
 .food-card-container {
     background-color: white;
     padding: 15px;
@@ -223,7 +223,8 @@ h3 {
 }
 
 .food-item-name {
-    color: #333;
+    /* 🔴 تغییر اعمال شده: خاکستری شدن نام غذا 🔴 */
+    color: #555555; 
     font-size: 16px;
     font-weight: bold;
     margin-bottom: 5px;
@@ -235,8 +236,9 @@ h3 {
     margin-bottom: 5px;
 }
 .food-item-desc {
+    /* 🔴 تغییر اعمال شده: خاکستری شدن توضیحات 🔴 */
     font-size: 13px;
-    color: #777;
+    color: #777777; 
     margin-bottom: 8px;
 }
 
