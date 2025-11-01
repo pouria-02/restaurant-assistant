@@ -12,7 +12,6 @@ MODEL_NAME = "gemini-2.0-flash-exp"
 try:
     llm = ChatGoogleGenerativeAI(model=MODEL_NAME, api_key=api_key)
 except Exception:
-    # Mock LLM for local testing without API Key
     class MockLLM:
         def invoke(self, msg):
             return type('Response', (object,), {'content': 'من فقط درباره‌ی منو می‌تونم کمکت کنم :)'})()
@@ -91,7 +90,6 @@ div.block-container {
     direction: rtl; /* برای نمایش از راست به چپ */
     scrollbar-width: none; 
     -ms-overflow-style: none;
-    /* تنظیمات فلکس برای تضمین نمایش افقی */
     display: flex; 
     flex-direction: row; 
 }
@@ -101,7 +99,7 @@ div.block-container {
 
 /* استایل کارت‌های دسته‌بندی شبیه تصویر */
 .category-card {
-    display: flex; /* تغییر از inline-flex به flex برای کنترل بهتر */
+    display: flex; 
     flex-shrink: 0; /* جلوگیری از کوچک شدن کارت‌ها */
     flex-direction: column;
     align-items: center;
@@ -196,7 +194,8 @@ div.block-container {
 .food-item-price {
     color: #2ECC71; 
     font-size: 16px;
-    font-weight: bold;
+    /* تغییر اعمال شده: افزایش ضخامت فونت به 900 (Ultra Bold) */
+    font-weight: 900; 
     direction: rtl;
 }
 
@@ -238,12 +237,10 @@ st.markdown('<div class="category-bar-container">', unsafe_allow_html=True)
 
 selected_category = st.session_state.selected_category
 
-# نکته: ما از تگ‌های <a> در یک loop و داخل یک div با display: flex استفاده می‌کنیم
 for category in categories:
     is_selected = "selected" if category == selected_category else ""
     icon = category_icons.get(category, "❓")
     
-    # استفاده از لینک HTML برای تغییر query parameter
     url_to_click = f"/?category={category}"
     
     st.markdown(f"""
