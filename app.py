@@ -112,8 +112,8 @@ div.block-container {
     max-width: 95%;
 }
 .stApp {
-    /* 🟢 تغییر اعمال شده: رنگ کرمی روشن‌تر و گرم‌تر */
-    background-color: #FFF8E1; 
+    /* 🟢 تغییر اعمال شده: رنگ کرمی تیره‌تر و گرم‌تر */
+    background-color: #FBEEC8; 
 }
 
 /* رنگ مشکی برای عنوان دستیار رستوران (st.subheader) */
@@ -124,7 +124,7 @@ h3 {
 /* 🟢 استایل دهی باکس ورودی دستیار 🟢 */
 .stTextInput > div > div {
     /* پس‌زمینه هم‌رنگ پس‌زمینه کلی اپلیکیشن */
-    background-color: #FFF8E1; 
+    background-color: #FBEEC8; 
     /* بوردر سبز همرنگ قیمت‌ها */
     border: 2px solid #2ECC71 !important; 
     border-radius: 0.5rem; 
@@ -140,7 +140,7 @@ h3 {
 /* رنگ متن ورودی (متنی که تایپ می‌شود) */
 .stTextInput > div > div > input {
     color: #000000 !important; 
-    background-color: #FFF8E1 !important; 
+    background-color: #FBEEC8 !important; 
 }
 
 
