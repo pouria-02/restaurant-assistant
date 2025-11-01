@@ -12,7 +12,7 @@ MODEL_NAME = "gemini-2.0-flash-exp"
 try:
     llm = ChatGoogleGenerativeAI(model=MODEL_NAME, api_key=api_key)
 except Exception:
-    # در محیط محلی بدون تنظیم GOOGLE_API_KEY، این خط برای ادامه اجرای UI قرار داده می‌شود
+    # Mock LLM for local testing without API Key
     class MockLLM:
         def invoke(self, msg):
             return type('Response', (object,), {'content': 'من فقط درباره‌ی منو می‌تونم کمکت کنم :)'})()
@@ -34,9 +34,9 @@ def restaurant_assistant(question):
     response = llm.invoke(msg)
     return response.content
 
-# --- منوی نمونه با ساختار شامل قیمت و سایز (بدون تغییر) ---
+# --- منوی نمونه و آیکون‌ها ---
 menu = {
-    "قهوه": {
+    "نوشیدنی گرم": {
         "موکا مخصوص": {
             "size_mid": {"desc": "ترکیب دوشات اسپرسو، شکلات داغ و خامه", "price": "۱۹۸,۸۰۰", "img": "https://raw.githubusercontent.com/pouria-02/restaurant-assistant/main/capp.jpg"},
             "size_large": {"desc": "ترکیب دوشات اسپرسو، شکلات داغ و خامه", "price": "۲۲۸,۸۰۰", "img": "https://raw.githubusercontent.com/pouria-02/restaurant-assistant/main/capp.jpg"}
@@ -44,23 +44,27 @@ menu = {
         "کاپوچینو": {
             "size_mid": {"desc": "اسپرسو، شیر کف دار، شکلات پودر", "price": "۱۶۵,۰۰۰", "img": "https://raw.githubusercontent.com/pouria-02/restaurant-assistant/main/capp.jpg"},
         },
-        "لاته": {
-            "size_mid": {"desc": "اسپرسو، شیر بخار داده شده", "price": "۱۷۰,۰۰۰", "img": "https://raw.githubusercontent.com/pouria-02/restaurant-assistant/main/latte.jpg"},
-        }
     },
     "فست فود": {
         "پیتزا مارگاریتا": {"mid": {"desc": "خمیر نازک، سس گوجه‌فرنگی، پنیر موتزارلا، ریحان تازه", "price": "۲۵۰,۰۰۰", "img": "https://raw.githubusercontent.com/pouria-02/restaurant-assistant/main/margharita.jpeg"}},
-        "پیتزا پپرونی": {"mid": {"desc": "خمیر نازک، سس گوجه‌فرنگی، پنیر موتزارلا، پپرونی", "price": "۲۹۰,۰۰۰", "img": "https://raw.githubusercontent.com/pouria-02/restaurant-assistant/main/Pepperoni.jpg"}},
     },
-    "صبحانه": {
-        "املت سبزیجات": {"mid": {"desc": "تخم مرغ، فلفل دلمه‌ای، گوجه، سبزیجات تازه", "price": "۹۰,۰۰۰", "img": "https://raw.githubusercontent.com/pouria-02/restaurant-assistant/main/omellete.jpg"}},
+    "چای و دمنوش": {
+        "چای سبز": {"mid": {"desc": "چای سبز با عطر ملایم", "price": "۷۰,۰۰۰", "img": "https://raw.githubusercontent.com/pouria-02/restaurant-assistant/main/omellete.jpg"}},
     },
-    "پیش غذا": {
-        "سالاد سزار": {"mid": {"desc": "کاهو رومی، مرغ گریل‌شده، پنیر پارمزان، کروتون", "price": "۱۲۰,۰۰۰", "img": "https://raw.githubusercontent.com/pouria-02/restaurant-assistant/main/Pepperoni.jpg"}},
+    "میلکشیک‌ها": {
+        "شکلات": {"mid": {"desc": "میلکشیک شکلاتی", "price": "۱۵۰,۰۰۰", "img": "https://raw.githubusercontent.com/pouria-02/restaurant-assistant/main/Pepperoni.jpg"}},
     }
 }
 
-# --- CSS برای استایل شبیه عکس ---
+# دیکشنری آیکون‌ها (از ایموجی یا آیکون‌های SVG/URL استفاده می‌شود)
+category_icons = {
+    "نوشیدنی گرم": "☕", # یا آیکون URL: "https://raw.githubusercontent.com/pouria-02/restaurant-assistant/main/hot_drink_icon.png"
+    "فست فود": "🍔",
+    "چای و دمنوش": "🍵",
+    "میلکشیک‌ها": "🥤"
+}
+
+# --- CSS برای استایل جدید ---
 st.markdown("""
 <style>
 /* فونت و پس زمینه */
@@ -71,37 +75,75 @@ div.block-container {
 .stApp {
     background-color: #FFF8E7; /* رنگ کرمی ملایم */
 }
+/* بخش بالایی صفحه برای دسته‌بندی‌ها */
+.category-selection-area {
+    background-color: white; /* پس‌زمینه سفید برای نوار دسته‌بندی */
+    padding: 10px 0;
+    margin-bottom: 20px;
+    border-radius: 20px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+}
 
 /* نوار دسته‌بندی افقی */
 .category-bar-container {
-    overflow-x: auto;
+    overflow-x: scroll; /* اسکرول افقی */
     white-space: nowrap;
-    padding-bottom: 10px;
-    margin-bottom: 20px;
+    padding: 0 10px 5px 10px;
     direction: rtl; /* برای نمایش از راست به چپ */
+    scrollbar-width: none; /* برای فایرفاکس */
+    -ms-overflow-style: none;  /* برای IE و Edge */
+}
+.category-bar-container::-webkit-scrollbar { 
+    display: none; /* برای کروم، سافاری و اپرا */
 }
 
-.category-button {
-    display: inline-block;
-    padding: 8px 15px;
-    margin: 5px;
-    border-radius: 20px; /* دکمه‌های گرد */
+/* استایل کارت‌های دسته‌بندی شبیه تصویر */
+.category-card {
+    display: inline-flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 85px; /* اندازه کارت‌ها */
+    height: 85px;
+    margin: 0 5px;
+    border-radius: 15px;
     cursor: pointer;
-    font-size: 14px;
-    font-weight: bold;
     text-align: center;
+    transition: all 0.2s;
+    background-color: #f0f0f0; /* پس‌زمینه کارت‌های غیرفعال */
+    border: 1px solid #e0e0e0;
+    text-decoration: none; /* حذف زیرخط لینک */
     color: #333;
-    background-color: #e0e0e0;
-    transition: background-color 0.3s, color 0.3s;
+    font-size: 13px;
+    font-weight: bold;
+    padding-top: 10px;
 }
 
-.category-button.selected {
+.category-card:hover {
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
+/* استایل کارت فعال/انتخاب شده (رنگ سبز شاداب) */
+.category-card.selected {
     background-color: #2ECC71; /* رنگ سبز مشابه عکس */
     color: white;
-    box-shadow: 0 4px 6px rgba(46, 204, 113, 0.4);
+    border-color: #2ECC71;
+    box-shadow: 0 4px 8px rgba(46, 204, 113, 0.5);
 }
 
-/* استایل آیتم منو */
+.category-icon {
+    font-size: 30px; /* اندازه آیکون */
+    margin-bottom: 5px;
+    /* برای کارت‌های انتخاب شده، آیکون سفید می‌شود */
+    filter: invert(0); 
+}
+.category-card.selected .category-icon {
+    /* فیلتر برای سفید کردن آیکون یا استفاده از ایموجی سفید */
+    filter: invert(1);
+}
+
+
+/* استایل آیتم منو (بدون تغییر) */
 .food-card-container {
     background-color: white;
     padding: 15px;
@@ -134,7 +176,7 @@ div.block-container {
 }
 .food-item-size {
     font-size: 14px;
-    color: #333; /* سیاه */
+    color: #333;
     font-weight: bold;
     margin-bottom: 5px;
 }
@@ -151,7 +193,6 @@ div.block-container {
 }
 
 .food-item-price {
-    /* تغییر اعمال شده: رنگ سبز برای قیمت */
     color: #2ECC71; 
     font-size: 16px;
     font-weight: bold;
@@ -159,7 +200,7 @@ div.block-container {
 }
 
 .order-button {
-    background-color: #2ECC71; /* دکمه سبز */
+    background-color: #2ECC71;
     color: white;
     padding: 5px 15px;
     border-radius: 20px;
@@ -168,60 +209,72 @@ div.block-container {
     text-align: center;
     cursor: pointer;
 }
-
-/* مخفی کردن المان‌های پیش‌فرض Streamlit که ظاهر را خراب می‌کنند */
-.stRadio > label {
-    display: none;
-}
 </style>
 """, unsafe_allow_html=True)
 
-# --- منطق UI (بدون تغییر) ---
+# --- منطق UI ---
 
 st.markdown("<h1 style='text-align: right; color: #333; font-size: 24px; margin-bottom: 20px;'>🍽️ منوی کافه نمونه</h1>", unsafe_allow_html=True)
 
-
-# 1. نوار دسته‌بندی افقی
+# 1. نوار دسته‌بندی افقی جدید (شبیه تصویر)
 categories = list(menu.keys())
 default_category = categories[0]
 
-# استفاده از Session State برای نگهداری دسته‌بندی انتخاب شده
 if 'selected_category' not in st.session_state:
     st.session_state.selected_category = default_category
 
-# ساخت دکمه‌ها و تغییر وضعیت در Session State
-st.markdown('<div class="category-bar-container">', unsafe_allow_html=True)
-cols = st.columns(len(categories))
-for i, category in enumerate(categories):
-    # از st.button داخل یک ستون استفاده می‌کنیم
-    with cols[i]:
-        if st.button(category, key=f"cat_btn_{category}", help=f"نمایش دسته {category}"):
-            st.session_state.selected_category = category
-            st.rerun() # برای رفرش کردن صفحه و نمایش منوی جدید
+# --- مدیریت کلیک دسته‌بندی ---
+# از query parameters برای تغییر دسته استفاده می‌کنیم، که در Streamlit معادل کلیک دکمه است
+query_params = st.query_params
 
+if "category" in query_params:
+    selected_from_url = query_params["category"]
+    if selected_from_url in categories:
+        st.session_state.selected_category = selected_from_url
+        # حذف پارامتر برای جلوگیری از لوپ رفرش
+        del st.query_params["category"]
+
+# --- نمایش نوار دسته‌بندی ---
+st.markdown('<div class="category-selection-area">', unsafe_allow_html=True)
+st.markdown('<h3 style="text-align: right; margin: 0 15px 10px 0; font-size: 16px;">لیست دسته‌بندی‌ها ⌄</h3>', unsafe_allow_html=True)
+st.markdown('<div class="category-bar-container">', unsafe_allow_html=True)
+
+selected_category = st.session_state.selected_category
+
+for category in categories:
+    is_selected = "selected" if category == selected_category else ""
+    icon = category_icons.get(category, "❓")
+    
+    # استفاده از لینک HTML برای تغییر query parameter
+    # این روش در Streamlit باعث رفرش و تغییر Session State می‌شود
+    url_to_click = f"/?category={category}"
+    
+    st.markdown(f"""
+    <a href="{url_to_click}" target="_self" class='category-card {is_selected}'>
+        <div class='category-icon'>{icon}</div>
+        {category}
+    </a>
+    """, unsafe_allow_html=True)
 
 st.markdown('</div>', unsafe_allow_html=True)
+st.markdown('</div>', unsafe_allow_html=True)
+# --- پایان نوار دسته‌بندی ---
+
 
 # 2. نمایش آیتم‌های منو بر اساس دسته‌بندی انتخاب شده
-selected_category = st.session_state.selected_category
 st.markdown(f"<h2 style='text-align: right; color: #333; font-size: 20px; margin-top: 20px; margin-bottom: 20px;'>{selected_category}</h2>", unsafe_allow_html=True)
 
 if selected_category in menu:
     
-    # پیمایش در غذاهای دسته انتخاب شده
     for dish, sizes in menu[selected_category].items():
-        
-        # پیمایش در سایزهای یک غذا
         for size_key, info in sizes.items():
             
-            # تعیین نام سایز برای نمایش (مثلاً متوسط، بزرگ)
             if size_key.endswith("mid"):
                 size_name = "متوسط"
             elif size_key.endswith("large"):
                 size_name = "بزرگ"
             else:
-                size_name = "" # برای آیتم‌هایی که سایز ندارند (مثل پیتزا)
-            
+                size_name = "" 
             
             st.markdown(f"""
             <div class='food-card-container'>
