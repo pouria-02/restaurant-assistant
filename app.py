@@ -12,7 +12,6 @@ MODEL_NAME = "gemini-2.0-flash-exp"
 try:
     llm = ChatGoogleGenerativeAI(model=MODEL_NAME, api_key=api_key)
 except Exception:
-    # Mock LLM for local testing without API Key
     class MockLLM:
         def invoke(self, msg):
             return type('Response', (object,), {'content': 'من فقط درباره‌ی منو می‌تونم کمکت کنم :)'})()
@@ -72,12 +71,11 @@ div.block-container {
     max-width: 95%;
 }
 .stApp {
-    /* تغییر اعمال شده: رنگ کرمی گرم‌تر */
-    background-color: #FFF4D6; 
+    background-color: #FFF4D6; /* رنگ کرمی گرم‌تر */
 }
 /* بخش بالایی صفحه برای دسته‌بندی‌ها */
 .category-selection-area {
-    background-color: white; /* پس‌زمینه سفید برای نوار دسته‌بندی */
+    background-color: white; 
     padding: 10px 0;
     margin-bottom: 20px;
     border-radius: 20px;
@@ -90,29 +88,32 @@ div.block-container {
     white-space: nowrap;
     padding: 0 10px 5px 10px;
     direction: rtl; /* برای نمایش از راست به چپ */
-    scrollbar-width: none; /* برای فایرفاکس */
-    -ms-overflow-style: none;  /* برای IE و Edge */
+    scrollbar-width: none; 
+    -ms-overflow-style: none;
+    display: flex; /* تضمین نمایش افقی */
 }
 .category-bar-container::-webkit-scrollbar { 
-    display: none; /* برای کروم، سافاری و اپرا */
+    display: none; 
 }
 
 /* استایل کارت‌های دسته‌بندی شبیه تصویر */
 .category-card {
-    display: inline-flex;
+    /* تغییر مهم: inline-flex برای نمایش کنار هم */
+    display: inline-flex; 
+    flex-shrink: 0; /* جلوگیری از کوچک شدن کارت‌ها */
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    width: 85px; /* اندازه کارت‌ها */
+    width: 85px; 
     height: 85px;
     margin: 0 5px;
     border-radius: 15px;
     cursor: pointer;
     text-align: center;
     transition: all 0.2s;
-    background-color: #f0f0f0; /* پس‌زمینه کارت‌های غیرفعال */
+    background-color: #f0f0f0; 
     border: 1px solid #e0e0e0;
-    text-decoration: none; /* حذف زیرخط لینک */
+    text-decoration: none;
     color: #333;
     font-size: 13px;
     font-weight: bold;
@@ -125,14 +126,14 @@ div.block-container {
 
 /* استایل کارت فعال/انتخاب شده (رنگ سبز شاداب) */
 .category-card.selected {
-    background-color: #2ECC71; /* رنگ سبز مشابه عکس */
+    background-color: #2ECC71; 
     color: white;
     border-color: #2ECC71;
     box-shadow: 0 4px 8px rgba(46, 204, 113, 0.5);
 }
 
 .category-icon {
-    font-size: 30px; /* اندازه آیکون */
+    font-size: 30px; 
     margin-bottom: 5px;
     filter: invert(0); 
 }
@@ -239,6 +240,7 @@ for category in categories:
     is_selected = "selected" if category == selected_category else ""
     icon = category_icons.get(category, "❓")
     
+    # استفاده از لینک HTML برای تغییر query parameter
     url_to_click = f"/?category={category}"
     
     st.markdown(f"""
