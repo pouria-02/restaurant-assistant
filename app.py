@@ -13,7 +13,6 @@ try:
     llm = ChatGoogleGenerativeAI(model=MODEL_NAME, api_key=api_key)
 except Exception:
     # در محیط محلی بدون تنظیم GOOGLE_API_KEY، این خط برای ادامه اجرای UI قرار داده می‌شود
-    # در محیط عملیاتی واقعی، API Key باید تنظیم شده باشد
     class MockLLM:
         def invoke(self, msg):
             return type('Response', (object,), {'content': 'من فقط درباره‌ی منو می‌تونم کمکت کنم :)'})()
@@ -35,7 +34,7 @@ def restaurant_assistant(question):
     response = llm.invoke(msg)
     return response.content
 
-# --- منوی نمونه با ساختار جدید شامل قیمت و سایز ---
+# --- منوی نمونه با ساختار شامل قیمت و سایز (بدون تغییر) ---
 menu = {
     "قهوه": {
         "موکا مخصوص": {
@@ -70,7 +69,8 @@ div.block-container {
     max-width: 95%;
 }
 .stApp {
-    background-color: #f7f7f7; /* پس‌زمینه روشن‌تر */
+    /* تغییر اعمال شده: رنگ کرمی ملایم */
+    background-color: #FFF8E7; 
 }
 
 /* نوار دسته‌بندی افقی */
@@ -195,7 +195,7 @@ cols = st.columns(len(categories))
 for i, category in enumerate(categories):
     # از st.button داخل یک ستون استفاده می‌کنیم
     with cols[i]:
-        is_selected = "selected" if category == st.session_state.selected_category else ""
+        # is_selected = "selected" if category == st.session_state.selected_category else ""
         
         # استفاده از HTML برای دکمه و اجرای یک تابع callback برای تغییر حالت
         if st.button(category, key=f"cat_btn_{category}", help=f"نمایش دسته {category}"):
@@ -218,9 +218,9 @@ if selected_category in menu:
         for size_key, info in sizes.items():
             
             # تعیین نام سایز برای نمایش (مثلاً متوسط، بزرگ)
-            if size_key == "size_mid":
+            if size_key.endswith("mid"):
                 size_name = "متوسط"
-            elif size_key == "size_large":
+            elif size_key.endswith("large"):
                 size_name = "بزرگ"
             else:
                 size_name = "" # برای آیتم‌هایی که سایز ندارند (مثل پیتزا)
