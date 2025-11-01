@@ -103,7 +103,7 @@ category_icons = {
     "میلکشیک‌ها": "🥤"
 }
 
-# --- CSS برای استایل جدید (بدون تغییر در اینجا) ---
+# --- CSS برای استایل جدید ---
 st.markdown("""
 <style>
 /* فونت و پس زمینه */
@@ -112,7 +112,8 @@ div.block-container {
     max-width: 95%;
 }
 .stApp {
-    background-color: #FFF4D6; /* رنگ کرمی گرم‌تر */
+    /* 🟢 تغییر اعمال شده: رنگ کرمی روشن‌تر و گرم‌تر */
+    background-color: #FFF8E1; 
 }
 
 /* رنگ مشکی برای عنوان دستیار رستوران (st.subheader) */
@@ -123,33 +124,33 @@ h3 {
 /* 🟢 استایل دهی باکس ورودی دستیار 🟢 */
 .stTextInput > div > div {
     /* پس‌زمینه هم‌رنگ پس‌زمینه کلی اپلیکیشن */
-    background-color: #FFF4D6; 
+    background-color: #FFF8E1; 
     /* بوردر سبز همرنگ قیمت‌ها */
-    border: 2px solid #2ECC71 !important; 
-    border-radius: 0.5rem; 
+    border: 2px solid #2ECC71 !important; 
+    border-radius: 0.5rem; 
     box-shadow: none !important;
 }
 
 /* رنگ خاکستری برای لیبل (سوال خود را بنویسید...) */
 .stTextInput > label {
-    color: #555555 !important; 
+    color: #555555 !important; 
     font-weight: normal !important;
 }
 
 /* رنگ متن ورودی (متنی که تایپ می‌شود) */
 .stTextInput > div > div > input {
-    color: #000000 !important; 
-    background-color: #FFF4D6 !important; 
+    color: #000000 !important; 
+    background-color: #FFF8E1 !important; 
 }
 
 
 /* 🟢 استایل دهی دکمه ارسال فرم (submit button) 🟢 */
 .stFormSubmitButton > button {
-    background-color: #2ECC71 !important; 
-    color: white !important; 
-    border: none !important; 
-    border-radius: 20px !important; 
-    padding: 8px 20px !important; 
+    background-color: #2ECC71 !important; 
+    color: white !important; 
+    border: none !important; 
+    border-radius: 20px !important; 
+    padding: 8px 20px !important; 
     font-weight: bold !important;
     box-shadow: 0 4px 6px rgba(46, 204, 113, 0.4) !important;
 }
@@ -162,45 +163,45 @@ h3 {
 
 /* 🟢 استایل بخش بالایی صفحه برای دسته‌بندی‌ها (بخش مهم برای نمایش افقی) 🟢 */
 .category-selection-area {
-    background-color: white; 
+    background-color: white; 
     padding: 10px 0;
     margin-bottom: 20px;
     border-radius: 20px;
     box-shadow: 0 2px 5px rgba(0,0,0,0.05);
     /* اطمینان از نمایش افقی در مرورگرهای موبایل */
-    width: 100%; 
+    width: 100%; 
 }
 
 /* نوار دسته‌بندی افقی - این کلاس برای نمایش افقی و اسکرول در موبایل حیاتی است */
 .category-bar-container {
-    overflow-x: scroll; 
-    white-space: nowrap; 
+    overflow-x: scroll; 
+    white-space: nowrap; 
     padding: 0 10px 5px 10px;
-    direction: rtl; 
-    scrollbar-width: none; 
+    direction: rtl; 
+    scrollbar-width: none; 
     -ms-overflow-style: none;
     display: flex; /* کلید نمایش افقی */
     flex-direction: row; /* کلید نمایش افقی */
 }
-.category-bar-container::-webkit-scrollbar { 
-    display: none; 
+.category-bar-container::-webkit-scrollbar { 
+    display: none; 
 }
 
 /* استایل کارت‌های دسته‌بندی شبیه تصویر */
 .category-card {
-    display: flex; 
-    flex-shrink: 0; 
+    display: flex; 
+    flex-shrink: 0; 
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    width: 85px; 
+    width: 85px; 
     height: 85px;
     margin: 0 5px;
     border-radius: 15px;
     cursor: pointer;
     text-align: center;
     transition: all 0.2s;
-    background-color: #f0f0f0; 
+    background-color: #f0f0f0; 
     border: 1px solid #e0e0e0;
     text-decoration: none;
     color: #333;
@@ -215,16 +216,16 @@ h3 {
 
 /* استایل کارت فعال/انتخاب شده (رنگ سبز شاداب) */
 .category-card.selected {
-    background-color: #2ECC71; 
+    background-color: #2ECC71; 
     color: white;
     border-color: #2ECC71;
     box-shadow: 0 4px 8px rgba(46, 204, 113, 0.5);
 }
 
 .category-icon {
-    font-size: 30px; 
+    font-size: 30px; 
     margin-bottom: 5px;
-    filter: invert(0); 
+    filter: invert(0); 
 }
 .category-card.selected .category-icon {
     filter: invert(1);
@@ -258,7 +259,7 @@ h3 {
 
 .food-item-name {
     /* خاکستری شدن نام غذا (درخواستی قبلی) */
-    color: #555555; 
+    color: #555555; 
     font-size: 16px;
     font-weight: bold;
     margin-bottom: 5px;
@@ -272,7 +273,7 @@ h3 {
 .food-item-desc {
     /* خاکستری شدن توضیحات (درخواستی قبلی) */
     font-size: 13px;
-    color: #777777; 
+    color: #777777; 
     margin-bottom: 8px;
 }
 
@@ -283,9 +284,9 @@ h3 {
 }
 
 .food-item-price {
-    color: #2ECC71; 
+    color: #2ECC71; 
     font-size: 16px;
-    font-weight: 900; 
+    font-weight: 900; 
     direction: rtl;
 }
 
@@ -346,7 +347,7 @@ st.markdown('</div>', unsafe_allow_html=True)
 st.markdown('</div>', unsafe_allow_html=True)
 
 
-# 2. نمایش آیتم‌های منو بر اساس دسته‌بندی انتخاب شده 
+# 2. نمایش آیتم‌های منو بر اساس دسته‌بندی انتخاب شده 
 st.markdown(f"<h2 style='text-align: right; color: #333; font-size: 20px; margin-top: 20px; margin-bottom: 20px;'>{selected_category}</h2>", unsafe_allow_html=True)
 
 if selected_category in menu:
